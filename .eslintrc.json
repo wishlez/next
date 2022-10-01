@@ -1,3 +1,78 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-console": "error",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxBOF": 0,
+        "maxEOF": 0
+      }
+    ],
+    "object-shorthand": [
+      "error",
+      "always"
+    ],
+    "padded-blocks": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "quote-props": [
+      "error",
+      "consistent"
+    ],
+    "semi": "error",
+    "sort-keys": "error",
+    "react/jsx-curly-brace-presence": [
+      "error",
+      "always"
+    ],
+    "react/jsx-closing-bracket-location": "error",
+    "react/jsx-first-prop-new-line": "error",
+    "react/jsx-indent": "error",
+    "react/jsx-indent-props": "error",
+    "react/jsx-max-props-per-line": "error",
+    "react/jsx-no-useless-fragment": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
+    "react/jsx-one-expression-per-line": [
+      "error",
+      {
+        "allow": "single-child"
+      }
+    ],
+    "react/jsx-props-no-multi-spaces": "error",
+    "react/jsx-sort-props": "error",
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "declaration": "parens-new-line",
+        "assignment": "parens-new-line",
+        "return": "parens-new-line",
+        "arrow": "parens-new-line",
+        "condition": "parens-new-line",
+        "logical": "parens-new-line",
+        "prop": "parens-new-line"
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "error"
+  }
 }

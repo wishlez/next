@@ -12,12 +12,15 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "next": "^12.3.1",
+    "next-auth": "^4.12.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "18.7.23",
     "@types/react": "18.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "eslint": "8.22.0",
     "eslint-config-next": "^12.3.1"
   }

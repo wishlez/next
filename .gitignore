@@ -1,4 +1,10 @@
 *.logs
+.env*
 .idea
 node_modules
 dist
+
+# next.js
+.next
+out
+build

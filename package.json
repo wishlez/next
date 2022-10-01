@@ -6,13 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "npm run prisma:generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio"
   },
   "author": "Gopikrishna Sathyamurthy",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@prisma/client": "^4.4.0",
     "next": "^12.3.1",
     "next-auth": "^4.12.2",
+    "prisma": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

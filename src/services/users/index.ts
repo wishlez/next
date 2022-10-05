@@ -1,6 +1,6 @@
 import {Prisma} from '@prisma/client';
 import {Credentials} from '../../types/auth';
-import {User} from '../../types/user';
+import {User} from '../../types/users';
 import {encryptPassword} from '../utils/password';
 import {getPrismaClient} from '../utils/prisma';
 
@@ -16,6 +16,22 @@ export const getUser = async (credentials: Credentials): Promise<User> => await 
 export const createUser = async (data: Prisma.UserUncheckedCreateInput): Promise<User> => await prisma.user.create({
     data: {
         ...data,
+        accounts: {
+            createMany: {
+                data: [
+                    {
+                        accountType: 'Expense',
+                        builtIn: true,
+                        name: 'Cash Expense'
+                    },
+                    {
+                        accountType: 'Revenue',
+                        builtIn: true,
+                        name: 'Cash Income'
+                    }
+                ]
+            }
+        },
         password: encryptPassword(data.password)
     }
 });

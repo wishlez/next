@@ -1,3 +1,4 @@
+import 'material-symbols/rounded.css';
 import {SessionProvider} from 'next-auth/react';
 import type {AppProps} from 'next/app';
 import Head from 'next/head';
@@ -13,7 +14,6 @@ const App: FunctionComponent<AppProps<PageProps>> = ({Component, pageProps}) => 
                 </title>
             </Head>
             <SessionProvider session={pageProps.session}>
-                <div>{pageProps.session?.user && <a href={'/auth/sign-out'}>{'Sign Out'}</a>}</div>
                 <Component {...pageProps}/>
             </SessionProvider>
         </>

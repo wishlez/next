@@ -16,7 +16,7 @@ export const getUser = async (credentials: Credentials): Promise<User> => await 
 export const createUser = async (data: Prisma.UserUncheckedCreateInput): Promise<User> => await prisma.user.create({
     data: {
         ...data,
-        accounts: {
+        Account: {
             createMany: {
                 data: [
                     {

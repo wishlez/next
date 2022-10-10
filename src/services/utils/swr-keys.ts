@@ -4,5 +4,6 @@ export type SwrKeys = typeof swrKeys;
 
 export const swrKeys = {
     accountTypes: '/api/accounts/types',
-    accounts: '/api/accounts'
+    accounts: '/api/accounts',
+    tags: '/api/tags'
 } as const;

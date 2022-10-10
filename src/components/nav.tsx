@@ -7,6 +7,7 @@ export const Nav: FunctionComponent = () => (
     <NavContainer>
         <Link href={'/'}><Icon name={'home'}/></Link>
         <Link href={'/accounts'}>{'Accounts'}</Link>
+        <Link href={'/tags'}>{'Tags'}</Link>
         <span>{'|'}</span>
         <Link href={'/auth/sign-out'}>{'Sign Out'}</Link>
     </NavContainer>

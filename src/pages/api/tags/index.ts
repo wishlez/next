@@ -1,8 +1,8 @@
 import {NextApiResponse} from 'next';
 import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
-import {createTag, deleteTag, getTags, getTagUserId, updateTag} from '../../../services/database/tags';
+import {createTag, deleteTag, getTag, getTags, updateTag} from '../../../services/database/tags';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
-import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
+import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
 import {Tag, WithTags} from '../../../types/tags';
 
 export default authenticatedApi((user) => buildApiHandler({
@@ -13,7 +13,13 @@ export default authenticatedApi((user) => buildApiHandler({
             return badRequest(res);
         }
 
-        if (!await authorizedApi(req, await getTagUserId(id))) {
+        const tag = await getTag(id);
+
+        if (!tag) {
+            return notFound(res);
+        }
+
+        if (!await authorizedApi(req, tag.userId)) {
             return forbidden(res);
         }
 
@@ -49,17 +55,21 @@ export default authenticatedApi((user) => buildApiHandler({
         }
     },
     async put(req, res: NextApiResponse<Tag>) {
-        if (!await authorizedApi(req, await getTagUserId(req.body.id))) {
+        const tag = await getTag(req.body.id);
+
+        if (!tag) {
+            return notFound(res);
+        }
+
+        if (!await authorizedApi(req, tag.userId)) {
             return forbidden(res);
         }
 
         try {
-            const tag = await updateTag({
+            return res.send(await updateTag({
                 id: req.body.id,
                 name: req.body.name
-            });
-
-            return res.send(tag);
+            }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to update tag');
         }

@@ -21,7 +21,7 @@ export const getAccounts = async (User: Prisma.UserWhereInput): Promise<Account[
 };
 
 export const getAccount = async (id: number): Promise<Account> => {
-    const account = await prisma.account.findFirst({
+    const account = await prisma.account.findUnique({
         where: {
             id
         }
@@ -48,9 +48,3 @@ export const updateAccount = async (data: Prisma.AccountUncheckedUpdateInput): P
         id: data.id as number
     }
 }));
-
-export const getAccountUserId = async (id: number): Promise<number> => (await prisma.account.findUnique({
-    where: {
-        id
-    }
-})).userId;

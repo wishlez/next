@@ -31,6 +31,13 @@ export const forbidden: StatusHandler = (res, err, responseMessage = 'Forbidden'
     403
 );
 
+export const notFound: StatusHandler = (res, err, responseMessage = 'Not Found') => handleError(
+    res,
+    responseMessage,
+    err,
+    404
+);
+
 export const badRequest: StatusHandler = (res, err, responseMessage = 'Bad Request') => handleError(
     res,
     responseMessage,

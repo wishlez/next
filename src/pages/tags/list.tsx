@@ -27,8 +27,8 @@ const List: FunctionComponent<Props> = ({fallback}) => {
 export default List;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
-    const {id} = await getSessionUser(context);
-    const tags = await getTags({id});
+    const user = await getSessionUser(context);
+    const tags = await getTags(user);
 
     return {
         props: {

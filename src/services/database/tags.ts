@@ -12,6 +12,12 @@ export const getTags = async (User: Prisma.UserWhereInput): Promise<Tag[]> => {
     });
 };
 
+export const getTag = async (id: number): Promise<Tag> => (await prisma.tag.findUnique({
+    where: {
+        id
+    }
+}));
+
 export const createTag = async (data: Prisma.TagUncheckedCreateInput): Promise<Tag> => await prisma.tag.create({
     data
 });
@@ -30,9 +36,3 @@ export const updateTag = async (data: Prisma.TagUncheckedUpdateInput): Promise<T
         id: data.id as number
     }
 });
-
-export const getTagUserId = async (id: number): Promise<number> => (await prisma.tag.findUnique({
-    where: {
-        id
-    }
-})).userId;

@@ -1,8 +1,8 @@
 import {NextApiResponse} from 'next';
 import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
-import {createAccount, deleteAccount, getAccounts, getAccountUserId, updateAccount} from '../../../services/database/accounts';
+import {createAccount, deleteAccount, getAccount, getAccounts, updateAccount} from '../../../services/database/accounts';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
-import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
+import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
 import {Account, WithAccounts} from '../../../types/accounts';
 
 export default authenticatedApi((user) => buildApiHandler({
@@ -13,7 +13,13 @@ export default authenticatedApi((user) => buildApiHandler({
             return badRequest(res);
         }
 
-        if (!await authorizedApi(req, await getAccountUserId(id))) {
+        const account = await getAccount(id);
+
+        if (!account) {
+            return notFound(res);
+        }
+
+        if (!await authorizedApi(req, account.userId)) {
             return forbidden(res);
         }
 
@@ -53,20 +59,24 @@ export default authenticatedApi((user) => buildApiHandler({
         }
     },
     async put(req, res: NextApiResponse<Account>) {
-        if (!await authorizedApi(req, await getAccountUserId(req.body.id))) {
+        const account = await getAccount(req.body.id);
+
+        if (!account) {
+            return notFound(res);
+        }
+
+        if (!await authorizedApi(req, account.userId)) {
             return forbidden(res);
         }
 
         try {
-            const account = await updateAccount({
+            return res.send(await updateAccount({
                 accountType: req.body.accountType,
                 id: req.body.id,
                 maximumAmountOwed: req.body.maximumAmountOwed,
                 name: req.body.name,
                 openingBalance: req.body.openingBalance
-            });
-
-            return res.send(account);
+            }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to update account');
         }

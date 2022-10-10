@@ -32,8 +32,8 @@ const List: FunctionComponent<Props> = ({fallback}) => {
 export default List;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
-    const {id} = await getSessionUser(context);
-    const accounts = await getAccounts({id});
+    const user = await getSessionUser(context);
+    const accounts = await getAccounts(user);
 
     return {
         props: {

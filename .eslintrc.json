@@ -20,6 +20,7 @@
         "maxEOF": 0
       }
     ],
+    "no-shadow": "error",
     "object-shorthand": [
       "error",
       "always"

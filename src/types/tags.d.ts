@@ -10,4 +10,6 @@ export type WithTags<P = Record> = P & {
     tags: Tag[]
 };
 
-export type TagRequest = Omit<Tag, 'id' | 'userId'>;
+export type TagRequest = Omit<Tag, 'id' | 'userId'> & {
+    id?: number
+};

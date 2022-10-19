@@ -16,7 +16,7 @@ type Props = {
         { [k in SwrKeys['accountTypes']]: WithAccountTypes }
 }
 
-const List: FunctionComponent<Props> = ({fallback}) => {
+const Edit: FunctionComponent<Props> = ({fallback}) => {
     return (
         <Layout>
             <SWRConfig value={{fallback, revalidateOnMount: true}}>
@@ -26,7 +26,7 @@ const List: FunctionComponent<Props> = ({fallback}) => {
     );
 };
 
-export default List;
+export default Edit;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
     const id = Number(context.query.id);

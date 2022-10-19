@@ -3,7 +3,7 @@ import {authenticatedApi, authorizedApi} from '../../../services/auth/server-sid
 import {createAccount, deleteAccount, getAccount, getAccounts, updateAccount} from '../../../services/database/accounts';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
-import {Account, WithAccounts} from '../../../types/accounts';
+import {Account, AccountRequest, WithAccounts} from '../../../types/accounts';
 
 export default authenticatedApi((user) => buildApiHandler({
     async delete(req, res: NextApiResponse<Record<string, never>>) {
@@ -44,16 +44,16 @@ export default authenticatedApi((user) => buildApiHandler({
     },
     async post(req, res: NextApiResponse<Account>) {
         try {
-            const account = await createAccount({
-                accountType: req.body.accountType,
-                builtIn: false,
-                maximumAmountOwed: req.body.maximumAmountOwed,
-                name: req.body.name,
-                openingBalance: req.body.openingBalance,
-                userId: user.id
-            });
+            const accountRequest: AccountRequest = req.body;
 
-            return res.send(account);
+            return res.send(await createAccount({
+                accountType: accountRequest.accountType,
+                builtIn: false,
+                maximumAmountOwed: accountRequest.maximumAmountOwed,
+                name: accountRequest.name,
+                openingBalance: accountRequest.openingBalance,
+                userId: user.id
+            }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to create account');
         }
@@ -70,12 +70,14 @@ export default authenticatedApi((user) => buildApiHandler({
         }
 
         try {
+            const accountRequest: AccountRequest = req.body;
+
             return res.send(await updateAccount({
-                accountType: req.body.accountType,
-                id: req.body.id,
-                maximumAmountOwed: req.body.maximumAmountOwed,
-                name: req.body.name,
-                openingBalance: req.body.openingBalance
+                accountType: accountRequest.accountType,
+                id: accountRequest.id,
+                maximumAmountOwed: accountRequest.maximumAmountOwed,
+                name: accountRequest.name,
+                openingBalance: accountRequest.openingBalance
             }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to update account');

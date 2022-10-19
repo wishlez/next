@@ -3,7 +3,7 @@ import {authenticatedApi, authorizedApi} from '../../../services/auth/server-sid
 import {createTag, deleteTag, getTag, getTags, updateTag} from '../../../services/database/tags';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
-import {Tag, WithTags} from '../../../types/tags';
+import {Tag, TagRequest, WithTags} from '../../../types/tags';
 
 export default authenticatedApi((user) => buildApiHandler({
     async delete(req, res: NextApiResponse<Record<string, never>>) {
@@ -44,12 +44,12 @@ export default authenticatedApi((user) => buildApiHandler({
     },
     async post(req, res: NextApiResponse<Tag>) {
         try {
-            const tag = await createTag({
-                name: req.body.name,
-                userId: user.id
-            });
+            const tagRequest: TagRequest = req.body;
 
-            return res.send(tag);
+            return res.send(await createTag({
+                name: tagRequest.name,
+                userId: user.id
+            }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to create tag');
         }
@@ -66,9 +66,11 @@ export default authenticatedApi((user) => buildApiHandler({
         }
 
         try {
+            const tagRequest: TagRequest = req.body;
+
             return res.send(await updateTag({
-                id: req.body.id,
-                name: req.body.name
+                id: tagRequest.id,
+                name: tagRequest.name
             }));
         } catch (err) {
             return internalServerError(res, err, 'Failed to update tag');

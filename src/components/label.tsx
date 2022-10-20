@@ -1,14 +1,14 @@
-import {FunctionComponent, PropsWithChildren} from 'react';
+import {FunctionComponent, HTMLAttributes} from 'react';
 
-export const Label: FunctionComponent<PropsWithChildren> = (props) => (
+export const Label: FunctionComponent<HTMLAttributes<HTMLLabelElement>> = ({style, ...props}) => (
     <label
         style={{
             alignItems: 'start',
             display: 'flex',
             flexDirection: 'column',
-            margin: '.5em'
+            margin: '.5em',
+            ...style
         }}
-    >
-        {props.children}
-    </label>
+        {...props}
+    />
 );

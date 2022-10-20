@@ -1,7 +1,7 @@
 import {ReactElement} from 'react';
 import {GetAdjustedOptions, GetOptions} from '../../types/options';
 
-export const getOptions: GetOptions = (items, label, value ): ReactElement[] => items.map((item) => (
+export const getOptions: GetOptions = (items, label, value): ReactElement[] => items.map((item) => (
     <option
         key={`${item[value]}`}
         value={`${item[value]}`}

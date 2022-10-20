@@ -1,11 +1,12 @@
-import {FormEvent, FunctionComponent, useRef} from 'react';
+import React, {FormEvent, FunctionComponent, useRef} from 'react';
 import useSWR from 'swr';
 import {getAdjustedOptions, getOptions, getSelectedOptions} from '../../services/utils/options';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithAccounts} from '../../types/accounts';
 import {WithTags} from '../../types/tags';
-import {Transaction, TransactionRequest, TransactionTag} from '../../types/transactions';
+import {Transaction, TransactionRequest, TransactionTag, WithTransactions} from '../../types/transactions';
 import {Label} from '../label';
+import {TransactionDescriptionInput} from './transaction-description-input';
 
 type Props = {
     onCancel: () => void
@@ -25,6 +26,7 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
     const tagsRef = useRef<HTMLSelectElement>();
     const {data: accounts} = useSWR<WithAccounts>(swrKeys.accounts);
     const {data: tags} = useSWR<WithTags>(swrKeys.tags);
+    const {data: transactions} = useSWR<WithTransactions>(swrKeys.transactions);
     const existingTags = getExistingTags(props.transaction?.TransactionTag);
 
     const submitTransaction = async (event: FormEvent): Promise<void> => {
@@ -49,17 +51,25 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                 {props.title}
             </h2>
             <div>
-                <Label>
-                    {'Description'}
-                    <input
-                        autoFocus
-                        defaultValue={props.transaction?.description}
-                        placeholder={'Describe transaction'}
-                        ref={descriptionRef}
-                        required
-                        type={'text'}
-                    />
-                </Label>
+                <TransactionDescriptionInput
+                    autocompleteOptions={transactions?.transactions}
+                    onAutocomplete={(transaction): void => {
+                        if (!props.transaction || confirm('Override other input values with autocompletion?')) {
+                            amountRef.current.value = transaction.amount.toString();
+                            descriptionRef.current.value = transaction.description;
+                            fromAccountRef.current.value = transaction.fromAccountId.toString();
+                            toAccountRef.current.value = transaction.toAccountId.toString();
+
+                            const transactionTags = getExistingTags(transaction.TransactionTag);
+
+                            Array.from(tagsRef.current.options).forEach((option) => {
+                                option.selected = transactionTags.includes(Number(option.value));
+                            });
+                        }
+                    }}
+                    ref={descriptionRef}
+                    transaction={props.transaction}
+                />
                 <Label>
                     {'From account:'}
                     <select
@@ -110,7 +120,6 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                         multiple
                         name={'toAccountId'}
                         ref={tagsRef}
-                        required
                     >
                         {tagOptions}
                     </select>

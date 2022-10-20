@@ -10,9 +10,12 @@ export const TransactionCreate: FunctionComponent = () => {
 
     const closeForm = (): Promise<boolean> => router.push('/transactions');
 
-    const createTransaction = async (transaction: TransactionRequest): Promise<void> => {
+    const createTransaction = async (transaction: TransactionRequest, more: boolean): Promise<void> => {
         await doPost(swrKeys.transactions, transaction);
-        await closeForm();
+
+        if (!more) {
+            await closeForm();
+        }
     };
 
     return (

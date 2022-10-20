@@ -14,6 +14,7 @@ export const TransactionDescriptionInput = React.forwardRef<HTMLInputElement, Pr
             autoFocus
             defaultValue={props.transaction?.description}
             label={'Description'}
+            name={'description'}
             onOptionSelect={props.onAutocomplete}
             optionRenderer={(transaction): ReactElement => (
                 <>

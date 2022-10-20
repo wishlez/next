@@ -1,5 +1,6 @@
-import React, {FormEvent, FunctionComponent, useRef} from 'react';
+import React, {FunctionComponent, SyntheticEvent, useRef} from 'react';
 import useSWR from 'swr';
+import {doGet} from '../../services/utils/fetch';
 import {getAdjustedOptions, getOptions, getSelectedOptions} from '../../services/utils/options';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithAccounts} from '../../types/accounts';
@@ -10,7 +11,7 @@ import {TransactionDescriptionInput} from './transaction-description-input';
 
 type Props = {
     onCancel: () => void
-    onSubmit: (transaction: TransactionRequest) => void
+    onSubmit: (transaction: TransactionRequest, more: boolean) => void
     transaction?: Transaction
     title: string
 }
@@ -26,10 +27,10 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
     const tagsRef = useRef<HTMLSelectElement>();
     const {data: accounts} = useSWR<WithAccounts>(swrKeys.accounts);
     const {data: tags} = useSWR<WithTags>(swrKeys.tags);
-    const {data: transactions} = useSWR<WithTransactions>(swrKeys.transactions);
+    const {data: transactions, mutate} = useSWR<WithTransactions>(swrKeys.transactions, doGet);
     const existingTags = getExistingTags(props.transaction?.TransactionTag);
 
-    const submitTransaction = async (event: FormEvent): Promise<void> => {
+    const submitTransaction = async (event: SyntheticEvent<HTMLFormElement, SubmitEvent>): Promise<void> => {
         event.preventDefault();
 
         await props.onSubmit({
@@ -39,7 +40,11 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
             fromAccountId: Number(fromAccountRef.current.value),
             tags: getAdjustedOptions(existingTags, getSelectedOptions(tagsRef.current)),
             toAccountId: Number(toAccountRef.current.value)
-        });
+        }, (event.nativeEvent.submitter as HTMLButtonElement).value === 'yes');
+        await mutate();
+
+        (event.nativeEvent.target as HTMLFormElement).reset();
+        descriptionRef.current.focus();
     };
 
     const accountOptions = getOptions(accounts?.accounts, 'name', 'id');
@@ -96,6 +101,7 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                     {'Transaction date:'}
                     <input
                         defaultValue={props.transaction?.date}
+                        name={'date'}
                         placeholder={'Enter transaction date'}
                         ref={dateRef}
                         required
@@ -107,8 +113,10 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                     <input
                         defaultValue={props.transaction?.amount}
                         min={0}
+                        name={'amount'}
                         placeholder={'Enter transaction amount'}
                         ref={amountRef}
+                        required
                         step={0.01}
                         type={'number'}
                     />
@@ -118,7 +126,7 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                     <select
                         defaultValue={existingTags.map((id) => id.toString())}
                         multiple
-                        name={'toAccountId'}
+                        name={'tags'}
                         ref={tagsRef}
                     >
                         {tagOptions}
@@ -132,9 +140,24 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                 >
                     {'Cancel'}
                 </button>
-                <button type={'submit'}>
-                    {props.transaction ? 'Update' : 'Create'}
-                </button>
+                {props.transaction ? <button type={'submit'}>{'Update'}</button> : (
+                    <>
+                        <button
+                            name={'continue'}
+                            type={'submit'}
+                            value={'yes'}
+                        >
+                            {'Add more'}
+                        </button>
+                        <button
+                            name={'continue'}
+                            type={'submit'}
+                            value={'no'}
+                        >
+                            {'Add one'}
+                        </button>
+                    </>
+                )}
             </div>
         </form>
     );

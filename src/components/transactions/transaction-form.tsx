@@ -33,18 +33,23 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
     const submitTransaction = async (event: SyntheticEvent<HTMLFormElement, SubmitEvent>): Promise<void> => {
         event.preventDefault();
 
+        const more = (event.nativeEvent.submitter as HTMLButtonElement).value === 'yes';
+        const retainDate = dateRef.current.value;
         await props.onSubmit({
             amount: Number(amountRef.current.value),
-            date: dateRef.current.value,
+            date: retainDate,
             description: descriptionRef.current.value,
             fromAccountId: Number(fromAccountRef.current.value),
             tags: getAdjustedOptions(existingTags, getSelectedOptions(tagsRef.current)),
             toAccountId: Number(toAccountRef.current.value)
-        }, (event.nativeEvent.submitter as HTMLButtonElement).value === 'yes');
+        }, more);
         await mutate();
 
-        (event.nativeEvent.target as HTMLFormElement).reset();
-        descriptionRef.current.focus();
+        if (more) {
+            (event.nativeEvent.target as HTMLFormElement).reset();
+            dateRef.current.value = retainDate;
+            descriptionRef.current.focus();
+        }
     };
 
     const accountOptions = getOptions(accounts?.accounts, 'name', 'id');

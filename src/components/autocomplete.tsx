@@ -48,12 +48,7 @@ const AutocompleteRenderer = <T, >(props: Props<T>, ref: React.ForwardedRef<HTML
         }
 
         setMatchedOptions(searchResults);
-
-        if (searchResults.length) {
-            setActiveIndex((index) => Math.min(index, searchResults.length));
-        } else {
-            setActiveIndex(0);
-        }
+        setActiveIndex((index) => Math.min(index, searchResults.length - 1));
     };
 
     const closePopup = (): void => {
@@ -70,7 +65,11 @@ const AutocompleteRenderer = <T, >(props: Props<T>, ref: React.ForwardedRef<HTML
     };
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
-        if (event.code === 'ArrowDown') {
+        if (event.code === 'ArrowDown' && !matchedOptions.length) {
+            event.preventDefault();
+
+            setMatchedOptions(props.options);
+        } else if (event.code === 'ArrowDown') {
             event.preventDefault();
 
             setActiveIndex((index) => limitIncrement(index, matchedOptions.length - 1));
@@ -109,6 +108,7 @@ const AutocompleteRenderer = <T, >(props: Props<T>, ref: React.ForwardedRef<HTML
                 onKeyDown={handleKeyDown}
                 ref={inputRef}
                 {...inputProps}
+                autoComplete={'off'}
             />
             <ul
                 style={{

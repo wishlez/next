@@ -1,8 +1,11 @@
 import type {Account as PrismaAccount} from '@prisma/client';
+import {Transaction} from './transactions';
 
 export type Account = Omit<PrismaAccount, 'openingBalance' | 'maximumAmountOwed'> & {
     openingBalance: number
     maximumAmountOwed: number
+    Incoming?: Partial<Transaction>[]
+    Outgoing?: Partial<Transaction>[]
 };
 
 export type WithAccount<P = Record> = P & {

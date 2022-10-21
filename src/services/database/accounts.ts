@@ -4,14 +4,40 @@ import {getPrismaClient} from '../utils/prisma';
 
 const prisma = getPrismaClient();
 
-const serialize = (account: PrismaAccount): Account => ({
+type PartialTransaction = { amount: Prisma.Decimal };
+type AccountWithTransaction = PrismaAccount & {
+    Incoming?: PartialTransaction[]
+    Outgoing?: PartialTransaction[]
+};
+
+const serializeTransactionAmount = ({amount}: PartialTransaction): { amount: number } => ({amount: amount.toNumber()});
+
+const serialize = (account: AccountWithTransaction): Account => ({
     ...account,
+    Incoming: account.Incoming?.map(serializeTransactionAmount) || [],
+    Outgoing: account.Outgoing?.map(serializeTransactionAmount) || [],
     maximumAmountOwed: account.maximumAmountOwed.toNumber(),
     openingBalance: account.openingBalance.toNumber()
 });
 
 export const getAccounts = async (User: Prisma.UserWhereInput): Promise<Account[]> => {
-    const accounts = await prisma.account.findMany({
+    const accounts: AccountWithTransaction[] = await prisma.account.findMany({
+        include: {
+            Incoming: {
+                select: {
+                    amount: true
+                }
+            },
+            Outgoing: {
+                select: {
+                    amount: true
+                }
+            }
+        },
+        orderBy: [
+            {builtIn: 'desc'},
+            {name: 'asc'}
+        ],
         where: {
             User
         }

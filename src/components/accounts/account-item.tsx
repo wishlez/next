@@ -1,13 +1,21 @@
+import BigNumber from 'bignumber.js';
 import Link from 'next/link';
 import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
-import {WithAccount} from '../../types/accounts';
+import {Account, WithAccount} from '../../types/accounts';
 import {Icon} from '../icon';
 
 type Props = WithAccount<{
     onChange: () => void
 }>
+
+const getBalance = (account: Account): string => {
+    const incoming = account.Incoming.reduce((sum, {amount}) => sum.plus(amount), new BigNumber(0));
+    const outgoing = account.Outgoing.reduce((sum, {amount}) => sum.plus(amount), new BigNumber(0));
+
+    return incoming.plus(account.openingBalance).minus(outgoing).toFixed(2);
+};
 
 export const AccountItem: FunctionComponent<Props> = (props) => {
     const handleDelete = async (): Promise<void> => {
@@ -28,7 +36,7 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
                 {props.account.accountType}
             </td>
             <td>
-                {!props.account.builtIn && '0'}
+                {!props.account.builtIn && getBalance(props.account)}
             </td>
             <td>
                 {props.account.builtIn ? (

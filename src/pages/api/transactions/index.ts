@@ -34,7 +34,7 @@ export default authenticatedApi((user) => buildApiHandler({
     },
     async get(req, res: NextApiResponse<WithTransactions>) {
         try {
-            const transactions = await getTransactions(user);
+            const transactions = await getTransactions(user, Number(req.query.size), Number(req.query.page));
 
             return res.send({
                 transactions

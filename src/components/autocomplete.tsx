@@ -77,7 +77,7 @@ const AutocompleteRenderer = <T, >(props: Props<T>, ref: React.ForwardedRef<HTML
             event.preventDefault();
 
             setActiveIndex((index) => limitDecrement(index, 0));
-        } else if (event.code === 'Enter' && matchedOptions.length) {
+        } else if (event.code === 'Enter' && matchedOptions[activeIndex]) {
             event.preventDefault();
 
             applySelection(activeIndex);

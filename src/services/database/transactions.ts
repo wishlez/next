@@ -57,7 +57,10 @@ export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Pr
     return transactions.map(serialize);
 };
 
-export const getTransactions = async (User: Prisma.UserWhereInput): Promise<Transaction[]> => {
+export const getTransactions = async (User: Prisma.UserWhereInput, size: number, page: number): Promise<Transaction[]> => {
+    const take = size || undefined;
+    const skip = ((page - 1) * take) || undefined;
+
     const transactions = await prisma.transaction.findMany({
         include: {
             FromAccount: {
@@ -76,9 +79,12 @@ export const getTransactions = async (User: Prisma.UserWhereInput): Promise<Tran
                 }
             }
         },
-        orderBy: {
-            date: 'desc'
-        },
+        orderBy: [
+            {date: 'desc'},
+            {id: 'desc'}
+        ],
+        skip,
+        take,
         where: {
             User
         }

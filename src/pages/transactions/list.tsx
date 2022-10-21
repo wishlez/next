@@ -33,7 +33,8 @@ export default List;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
     const user = await getSessionUser(context);
-    const transactions = await getTransactions(user);
+    const {page, size} = context.query;
+    const transactions = await getTransactions(user, Number(size), Number(page));
 
     return {
         props: {

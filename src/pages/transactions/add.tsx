@@ -5,7 +5,6 @@ import {TransactionCreate} from '../../components/transactions/transaction-creat
 import {authenticated, getSessionUser} from '../../services/auth/server-side-auth';
 import {getAccounts} from '../../services/database/accounts';
 import {getTags} from '../../services/database/tags';
-import {getTransactions} from '../../services/database/transactions';
 import {SwrKeys, swrKeys} from '../../services/utils/swr-keys';
 import {WithAccounts} from '../../types/accounts';
 import {PageProps} from '../../types/page';
@@ -30,14 +29,12 @@ export const getServerSideProps = authenticated<PageProps<Props>>(async (context
     const user = await getSessionUser(context);
     const accounts = await getAccounts(user);
     const tags = await getTags(user);
-    const transactions = await getTransactions(user);
 
     return ({
         props: {
             fallback: {
                 [swrKeys.accounts]: {accounts},
-                [swrKeys.tags]: {tags},
-                [swrKeys.transactions]: {transactions}
+                [swrKeys.tags]: {tags}
             },
             title: 'Add new transaction'
         }

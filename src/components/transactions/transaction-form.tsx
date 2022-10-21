@@ -27,7 +27,7 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
     const tagsRef = useRef<HTMLSelectElement>();
     const {data: accounts} = useSWR<WithAccounts>(swrKeys.accounts);
     const {data: tags} = useSWR<WithTags>(swrKeys.tags);
-    const {data: transactions, mutate} = useSWR<WithTransactions>(swrKeys.transactions, doGet);
+    const {data: transactions, mutate} = useSWR<WithTransactions>(swrKeys.transactionSuggestions, doGet);
     const existingTags = getExistingTags(props.transaction?.TransactionTag);
 
     const submitTransaction = async (event: SyntheticEvent<HTMLFormElement, SubmitEvent>): Promise<void> => {
@@ -75,6 +75,8 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                             Array.from(tagsRef.current.options).forEach((option) => {
                                 option.selected = transactionTags.includes(Number(option.value));
                             });
+
+                            amountRef.current.select();
                         }
                     }}
                     ref={descriptionRef}
@@ -103,17 +105,6 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                     </select>
                 </Label>
                 <Label>
-                    {'Transaction date:'}
-                    <input
-                        defaultValue={props.transaction?.date}
-                        name={'date'}
-                        placeholder={'Enter transaction date'}
-                        ref={dateRef}
-                        required
-                        type={'date'}
-                    />
-                </Label>
-                <Label>
                     {'Transaction amount:'}
                     <input
                         defaultValue={props.transaction?.amount}
@@ -124,6 +115,17 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                         required
                         step={0.01}
                         type={'number'}
+                    />
+                </Label>
+                <Label>
+                    {'Transaction date:'}
+                    <input
+                        defaultValue={props.transaction?.date}
+                        name={'date'}
+                        placeholder={'Enter transaction date'}
+                        ref={dateRef}
+                        required
+                        type={'date'}
                     />
                 </Label>
                 <Label>

@@ -3,7 +3,7 @@ import {Account} from './accounts';
 import {AdjustedOptions} from './options';
 import {Tag} from './tags';
 
-type TransactionTag = PrismaTransactionTag & {
+export type TransactionTag = PrismaTransactionTag & {
     Tag?: Tag
     Transaction?: Transaction
 };

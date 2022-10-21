@@ -1,6 +1,6 @@
 import {Prisma, Transaction as PrismaTransaction} from '@prisma/client';
 import {AdjustedOptions} from '../../types/options';
-import {Transaction} from '../../types/transactions';
+import {Transaction, TransactionTag} from '../../types/transactions';
 import {toDateString} from '../utils/date';
 import {getPrismaClient} from '../utils/prisma';
 
@@ -11,6 +11,51 @@ const serialize = (transaction: PrismaTransaction): Transaction => ({
     amount: transaction.amount.toNumber(),
     date: toDateString(transaction.date)
 });
+
+export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Promise<Transaction[]> => {
+    let transactions: PrismaTransaction[] = await prisma.$queryRaw<PrismaTransaction[]>`
+        SELECT t.* FROM
+            Transaction t,
+            (
+                SELECT description, fromAccountId, toAccountId, MAX(DATE) maxDate FROM Transaction
+                WHERE userId = ${User.id}
+                GROUP BY description, fromAccountId, toAccountId
+            ) m
+        WHERE
+            userId = ${User.id}
+            AND t.description = m.description
+            AND t.fromAccountId = m.fromAccountId
+            AND t.toAccountId = m.toAccountId
+            AND t.date = m.maxDate
+        ORDER BY DATE DESC
+    `;
+
+    const transactionIds = transactions.map(({id}) => id);
+    const tags = await prisma.transactionTag.findMany({
+        include: {
+            Tag: true
+        },
+        where: {
+            transactionId: {
+                in: transactionIds
+            }
+        }
+    });
+    const tagsIndex = tags.reduce<Record<string, TransactionTag[]>>((index, {transactionId, Tag}) => ({
+        ...index,
+        [transactionId]: [
+            ...index[transactionId] || [],
+            {Tag}
+        ]
+    }), {});
+
+    transactions = transactions.map((transaction) => ({
+        ...transaction,
+        TransactionTag: tagsIndex[transaction.id] || []
+    }));
+
+    return transactions.map(serialize);
+};
 
 export const getTransactions = async (User: Prisma.UserWhereInput): Promise<Transaction[]> => {
     const transactions = await prisma.transaction.findMany({

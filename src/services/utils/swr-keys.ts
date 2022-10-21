@@ -6,5 +6,6 @@ export const swrKeys = {
     accountTypes: '/api/accounts/types',
     accounts: '/api/accounts',
     tags: '/api/tags',
+    transactionSuggestions: '/api/transactions/suggestions',
     transactions: '/api/transactions'
 } as const;

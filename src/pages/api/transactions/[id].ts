@@ -3,10 +3,10 @@ import {authenticatedApi, authorizedApi} from '../../../services/auth/server-sid
 import {getTransaction} from '../../../services/database/transactions';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
-import {WithTransactions} from '../../../types/transactions';
+import {WithTransaction} from '../../../types/transactions';
 
 export default authenticatedApi(() => buildApiHandler({
-    async get(req, res: NextApiResponse<WithTransactions>) {
+    async get(req, res: NextApiResponse<WithTransaction>) {
         try {
             const id = Number(req.query.id);
 

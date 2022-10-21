@@ -3,10 +3,10 @@ import {authenticatedApi, authorizedApi} from '../../../services/auth/server-sid
 import {getAccount} from '../../../services/database/accounts';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
-import {WithAccounts} from '../../../types/accounts';
+import {WithAccount} from '../../../types/accounts';
 
 export default authenticatedApi(() => buildApiHandler({
-    async get(req, res: NextApiResponse<WithAccounts>) {
+    async get(req, res: NextApiResponse<WithAccount>) {
         try {
             const id = Number(req.query.id);
 

@@ -76,6 +76,9 @@ export const getTransactions = async (User: Prisma.UserWhereInput): Promise<Tran
                 }
             }
         },
+        orderBy: {
+            date: 'desc'
+        },
         where: {
             User
         }

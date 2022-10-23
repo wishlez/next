@@ -7,6 +7,7 @@ import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Transaction, WithTransactions} from '../../types/transactions';
 import {TransactionItem} from './transaction-item';
+import styles from '../table.module.css';
 
 const pushRoute = (router: NextRouter, queryName: string, value: string | number, shallow?: boolean): void => {
     router.push({
@@ -70,7 +71,7 @@ export const TransactionsList: FunctionComponent = () => {
                 <option value={50}>{50}</option>
                 <option value={100}>{100}</option>
             </select>
-            <table>
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         <th>{'Description'}</th>
@@ -78,7 +79,8 @@ export const TransactionsList: FunctionComponent = () => {
                         <th>{'To Account'}</th>
                         <th>{'Date'}</th>
                         <th>{'Tags'}</th>
-                        <th>{'Amount'}</th>
+                        <th style={{textAlign: 'right'}}>{'Amount'}</th>
+                        <th/>
                     </tr>
                 </thead>
                 <tbody>

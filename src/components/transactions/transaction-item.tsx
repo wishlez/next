@@ -3,6 +3,7 @@ import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithTransaction} from '../../types/transactions';
+import {Amount} from '../amount';
 import {Icon} from '../icon';
 
 type Props = WithTransaction<{
@@ -36,8 +37,8 @@ export const TransactionItem: FunctionComponent<Props> = (props) => {
             <td>
                 {props.transaction.TransactionTag.map(({Tag}) => Tag.name).join(', ')}
             </td>
-            <td>
-                {props.transaction.amount}
+            <td style={{textAlign: 'right'}}>
+                <Amount amount={props.transaction.amount}/>
             </td>
             <td>
                 <Link href={`edit?id=${props.transaction.id}`}>

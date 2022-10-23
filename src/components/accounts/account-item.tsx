@@ -4,6 +4,7 @@ import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Account, WithAccount} from '../../types/accounts';
+import {Amount} from '../amount';
 import {Icon} from '../icon';
 
 type Props = WithAccount<{
@@ -35,8 +36,8 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
             <td>
                 {props.account.accountType}
             </td>
-            <td>
-                {!props.account.builtIn && getBalance(props.account)}
+            <td style={{textAlign: 'right'}}>
+                {!props.account.builtIn && <Amount amount={getBalance(props.account)}/>}
             </td>
             <td>
                 {props.account.builtIn ? (

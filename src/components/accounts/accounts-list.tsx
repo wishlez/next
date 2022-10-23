@@ -4,6 +4,7 @@ import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Account, WithAccounts} from '../../types/accounts';
 import {AccountItem} from './account-item';
+import styles from '../table.module.css';
 
 export const AccountsList: FunctionComponent = () => {
     const {data, error} = useSWR<WithAccounts>(swrKeys.accounts, doGet);
@@ -16,12 +17,13 @@ export const AccountsList: FunctionComponent = () => {
     return (
         <>
             {error && 'Failed to load accounts'}
-            <table>
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         <th>{'Name'}</th>
                         <th>{'Type'}</th>
-                        <th>{'Balance'}</th>
+                        <th style={{textAlign: 'right'}}>{'Balance'}</th>
+                        <th/>
                     </tr>
                 </thead>
                 <tbody>

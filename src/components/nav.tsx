@@ -5,7 +5,7 @@ import {NavContainer} from './nav-container';
 
 export const Nav: FunctionComponent = () => (
     <NavContainer>
-        <Link href={'/'}><Icon name={'home'}/></Link>
+        <Link href={'/'}><a><Icon name={'home'}/></a></Link>
         <Link href={'/accounts'}>{'Accounts'}</Link>
         <Link href={'/tags'}>{'Tags'}</Link>
         <Link href={'/transactions'}>{'Transactions'}</Link>

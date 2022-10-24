@@ -43,7 +43,7 @@ export const getServerSideProps = authenticated<PageProps<Props>>(async (context
     const tags = await getTags(user);
     let transactions: Transaction[];
 
-    if ([query.year, query.month, query.tagId, query.accountId].some((value) => value)) {
+    if ([query.description, query.year, query.month, query.tagId, query.accountId].some((value) => value)) {
         transactions = await getTransactions(user, query);
     } else {
         transactions = [];

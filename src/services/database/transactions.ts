@@ -16,6 +16,7 @@ const serialize = (transaction: PrismaTransaction): Transaction => ({
 });
 
 const buildTransactionsCondition = (query: TransactionQuery): Prisma.TransactionWhereInput => {
+    const description = query.description as string;
     const year = parseQueryNumber(query.year as string);
     const month = parseQueryNumber(query.month as string);
     const accountId = parseQueryNumber(query.accountId as string);
@@ -25,6 +26,11 @@ const buildTransactionsCondition = (query: TransactionQuery): Prisma.Transaction
 
     return {
         AND: {
+            ...description && {
+                description: {
+                    search: description
+                }
+            },
             ...!isNaN(year) && isNaN(month) && {
                 date: {
                     gte: toDateObject(year, 1, 1),

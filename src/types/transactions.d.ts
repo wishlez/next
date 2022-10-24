@@ -19,6 +19,7 @@ export type Transaction = Omit<PrismaTransaction, 'amount' | 'date'> & {
 };
 
 export interface TransactionQuery extends Query {
+    description?: QueryValue;
     year?: QueryValue;
     month?: QueryValue;
     accountId?: QueryValue;

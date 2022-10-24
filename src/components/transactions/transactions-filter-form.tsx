@@ -30,6 +30,15 @@ export const TransactionsFilterForm: FunctionComponent = () => {
                     }}
                 >
                     <Label>
+                        {'Enter description'}
+                        <input
+                            defaultValue={query.description}
+                            name={'description'}
+                            placeholder={'+made -payment'}
+                            type={'text'}
+                        />
+                    </Label>
+                    <Label>
                         {'Select a year'}
                         <select
                             defaultValue={query.year}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {FunctionComponent, useState} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
@@ -39,7 +40,7 @@ export const TagItem: FunctionComponent<Props> = (props) => {
                 />
             ) : (
                 <>
-                    {props.tag.name.toUpperCase()}
+                    <Link href={`/transactions/list?tagId=${props.tag.id}`}>{props.tag.name}</Link>
                     {'\u00A0'}
                     <button
                         onClick={startEditing}

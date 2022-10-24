@@ -4,13 +4,14 @@ import {Query, QueryValue, WithQuery} from '../types/query-value';
 type BuildQuery = (query: Query) => WithQuery
 type GetQuery = <T extends QueryValue>(queryName: string, fallback?: T) => T;
 type PushQuery = (query: Query, shallow?: boolean) => Promise<void>;
-type UpdateDuery = (query: Query) => Promise<void>;
+type UpdateQuery = (query: Query) => Promise<void>;
 
 type UseRouterQuery = () => {
     buildQuery: BuildQuery
     getQuery: GetQuery
     pushQuery: PushQuery
-    updateQuery: UpdateDuery
+    router: NextRouter
+    updateQuery: UpdateQuery
 };
 
 export const useRouterQuery: UseRouterQuery = () => {
@@ -52,6 +53,7 @@ export const useRouterQuery: UseRouterQuery = () => {
         buildQuery,
         getQuery,
         pushQuery,
+        router,
         updateQuery
     };
 };

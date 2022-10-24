@@ -23,13 +23,14 @@ const getMonthQuery = (range: DateParts, multiplier: -1 | 1): DateParts => {
 };
 
 export const TransactionsList: FunctionComponent = () => {
-    const {buildQuery, getQuery, updateQuery} = useRouterQuery();
+    const {buildQuery, getQuery, router, updateQuery} = useRouterQuery();
 
     const {data: startingDate} = useSWR<WithStartingDate>(swrKeys.startingDate);
     const range: DateParts = useMemo(() => ({
+        ...router.query,
         month: getQuery('month', startingDate.startingDate.month),
         year: getQuery('year', startingDate.startingDate.year)
-    }), [getQuery, startingDate.startingDate.month, startingDate.startingDate.year]);
+    }), [getQuery, router, startingDate.startingDate.month, startingDate.startingDate.year]);
     const swrKey = [swrKeys.transactions, range];
     const {data: transactions, error} = useSWR<WithTransactions>(swrKey, doGet);
     const {mutate} = useSWRConfig();

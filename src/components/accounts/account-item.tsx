@@ -31,7 +31,7 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
     return (
         <tr>
             <td>
-                {props.account.name}
+                <Link href={`/transactions/list?accountId=${props.account.id}`}>{props.account.name}</Link>
             </td>
             <td>
                 {props.account.accountType}

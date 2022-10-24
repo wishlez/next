@@ -9,12 +9,14 @@ import {getTransaction} from '../../services/database/transactions';
 import {Parameterized, SwrKeys, swrKeys} from '../../services/utils/swr-keys';
 import {WithAccounts} from '../../types/accounts';
 import {PageProps} from '../../types/page';
+import {WithTags} from '../../types/tags';
 import {WithTransaction} from '../../types/transactions';
 
 type Props = {
     fallback:
         { [k in Parameterized<SwrKeys['transactions']>]: WithTransaction } &
-        { [k in SwrKeys['accounts']]: WithAccounts }
+        { [k in SwrKeys['accounts']]: WithAccounts } &
+        { [k in SwrKeys['tags']]: WithTags }
 }
 
 const Edit: FunctionComponent<Props> = ({fallback}) => {

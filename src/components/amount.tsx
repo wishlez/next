@@ -1,16 +1,12 @@
 import {FunctionComponent} from 'react';
+import {formatNumber} from '../services/utils/number';
 
 type Props = {
     amount: number | string
 };
 
-const format = new Intl.NumberFormat('en', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2
-});
-
 export const Amount: FunctionComponent<Props> = (props) => (
     <>
-        {format.format(Number(props.amount))}
+        {formatNumber(Number(props.amount))}
     </>
 );

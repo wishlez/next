@@ -1,7 +1,10 @@
 import {DateTime} from 'luxon';
+import {ReactElement} from 'react';
 import {DateParts, ToDateObject, ToDateString} from '../../types/date';
 
 const dateOptions = {zone: 'utc'};
+const monthFormat = new Intl.DateTimeFormat('en', {month: 'long'});
+const currentYear = new Date().getFullYear();
 
 export const normalizeDate = (date: DateParts | Date | number): DateTime => {
     if (typeof date === 'number') {
@@ -36,3 +39,21 @@ export const toDateObject: ToDateObject = (year, month, day) => {
 
     return DateTime.fromSQL(year, dateOptions).toJSDate();
 };
+
+export const getMonthOptions = (): ReactElement[] => Array.from({length: 12}).map((_, index) => (
+    <option
+        key={index}
+        value={index + 1}
+    >
+        {monthFormat.format(new Date(Date.UTC(currentYear, (index + 1) % 12)))}
+    </option>
+));
+
+export const getYearOptions = (): ReactElement[] => Array.from({length: 50}).map((_, index) => (
+    <option
+        key={index}
+        value={currentYear - index}
+    >
+        {currentYear - index}
+    </option>
+));

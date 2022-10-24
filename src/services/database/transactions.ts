@@ -1,9 +1,10 @@
 import {Prisma, Transaction as PrismaTransaction} from '@prisma/client';
 import {DateParts} from '../../types/date';
 import {AdjustedOptions} from '../../types/options';
-import {QueryValue} from '../../types/query-value';
-import {Transaction, TransactionTag} from '../../types/transactions';
+import {QueryValue} from '../../types/query';
+import {Transaction, TransactionQuery, TransactionTag} from '../../types/transactions';
 import {normalizeDate, toDateObject, toDateString} from '../utils/date';
+import {parseQueryNumber, parseQueryNumbers} from '../utils/number';
 import {getPrismaClient} from '../utils/prisma';
 
 const prisma = getPrismaClient();
@@ -13,6 +14,45 @@ const serialize = (transaction: PrismaTransaction): Transaction => ({
     amount: transaction.amount.toNumber(),
     date: toDateString(transaction.date)
 });
+
+const buildTransactionsCondition = (query: TransactionQuery): Prisma.TransactionWhereInput => {
+    const year = parseQueryNumber(query.year as string);
+    const month = parseQueryNumber(query.month as string);
+    const accountId = parseQueryNumber(query.accountId as string);
+    const tagId = parseQueryNumbers(query.tagId as string[]);
+
+    return {
+        AND: {
+            ...!isNaN(year) && isNaN(month) && {
+                date: {
+                    gte: toDateObject(year, 1, 1),
+                    lt: toDateObject(year + 1, 1, 1)
+                }
+            },
+            ...!isNaN(year) && !isNaN(month) && {
+                date: {
+                    gte: toDateObject(year, month, 1),
+                    lt: toDateObject(year, month + 1, 1)
+                }
+            },
+            ...!isNaN(accountId) && {
+                OR: [
+                    {fromAccountId: accountId},
+                    {toAccountId: accountId}
+                ]
+            },
+            ...tagId.length && {
+                TransactionTag: {
+                    some: {
+                        tagId: {
+                            in: tagId
+                        }
+                    }
+                }
+            }
+        }
+    };
+};
 
 export const getStartingDate = async (User: Prisma.UserWhereInput, year: QueryValue, month: QueryValue): Promise<DateParts> => {
     const y: number = Number(year) || NaN;
@@ -87,7 +127,7 @@ export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Pr
     return transactions.map(serialize);
 };
 
-export const getTransactions = async (User: Prisma.UserWhereInput, year: number, month: number): Promise<Transaction[]> => {
+export const getTransactions = async (User: Prisma.UserWhereInput, query: TransactionQuery): Promise<Transaction[]> => {
     const transactions = await prisma.transaction.findMany({
         include: {
             FromAccount: {
@@ -110,13 +150,7 @@ export const getTransactions = async (User: Prisma.UserWhereInput, year: number,
             {date: 'desc'},
             {id: 'desc'}
         ],
-        where: {
-            User,
-            date: {
-                gte: toDateObject(year, month, 1),
-                lt: toDateObject(year, month + 1, 1)
-            }
-        }
+        where: buildTransactionsCondition(query)
     });
 
     return transactions.map(serialize);

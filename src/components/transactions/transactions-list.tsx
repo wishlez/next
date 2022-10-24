@@ -5,10 +5,9 @@ import {normalizeDate} from '../../services/utils/date';
 import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {DateParts} from '../../types/date';
-import {Transaction, WithStartingDate, WithTransactions} from '../../types/transactions';
-import styles from '../table.module.css';
+import {WithStartingDate, WithTransactions} from '../../types/transactions';
 import {useRouterQuery} from '../use-router-query';
-import {TransactionItem} from './transaction-item';
+import {TransactionsTable} from './transactions-table';
 
 const getMonthQuery = (range: DateParts, multiplier: -1 | 1): DateParts => {
     const {year, month} = normalizeDate({
@@ -49,28 +48,12 @@ export const TransactionsList: FunctionComponent = () => {
             <Link href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</Link>
             {' '}
             <Link href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</Link>
-            <table className={styles.table}>
-                <thead>
-                    <tr>
-                        <th>{'Description'}</th>
-                        <th>{'From Account'}</th>
-                        <th>{'To Account'}</th>
-                        <th>{'Date'}</th>
-                        <th>{'Tags'}</th>
-                        <th style={{textAlign: 'right'}}>{'Amount'}</th>
-                        <th/>
-                    </tr>
-                </thead>
-                <tbody>
-                    {transactions?.transactions.map((transaction: Transaction) => (
-                        <TransactionItem
-                            key={transaction.id}
-                            onChange={refresh}
-                            transaction={transaction}
-                        />
-                    ))}
-                </tbody>
-            </table>
+            {' '}
+            <Link href={'search'}>{'Search All'}</Link>
+            <TransactionsTable
+                onChange={refresh}
+                transactions={transactions?.transactions}
+            />
         </>
     );
 };

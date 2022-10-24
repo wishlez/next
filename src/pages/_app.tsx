@@ -4,6 +4,7 @@ import type {AppProps} from 'next/app';
 import Head from 'next/head';
 import {FunctionComponent} from 'react';
 import {PageProps} from '../types/page';
+import './_app.css';
 
 const App: FunctionComponent<AppProps<PageProps>> = ({Component, pageProps}) => {
     return (

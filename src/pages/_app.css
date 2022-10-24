@@ -1,0 +1,12 @@
+* {
+    font-family: sans-serif;
+}
+
+a,
+a:link,
+a:visited,
+a:active,
+a:focus,
+a:hover {
+    color: #0000ee;
+}

@@ -67,6 +67,7 @@ export const TransactionsFilterForm: FunctionComponent = () => {
                             name={'tagId'}
                         >
                             <option value={''}>{'All'}</option>
+                            <option value={0}>{'None'}</option>
                             {tagOptions}
                         </select>
                     </Label>

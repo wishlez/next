@@ -21,6 +21,8 @@ const buildTransactionsCondition = (query: TransactionQuery): Prisma.Transaction
     const accountId = parseQueryNumber(query.accountId as string);
     const tagId = parseQueryNumbers(query.tagId as string[]);
 
+    const tagLogic = tagId.length === 1 && tagId[0] === 0 ? 'every' : 'some';
+
     return {
         AND: {
             ...!isNaN(year) && isNaN(month) && {
@@ -43,7 +45,7 @@ const buildTransactionsCondition = (query: TransactionQuery): Prisma.Transaction
             },
             ...tagId.length && {
                 TransactionTag: {
-                    some: {
+                    [tagLogic]: {
                         tagId: {
                             in: tagId
                         }

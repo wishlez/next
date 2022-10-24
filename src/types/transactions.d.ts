@@ -1,5 +1,6 @@
 import type {Transaction as PrismaTransaction, TransactionTag as PrismaTransactionTag} from '@prisma/client';
 import {Account} from './accounts';
+import {DateParts} from './date';
 import {AdjustedOptions} from './options';
 import {Tag} from './tags';
 
@@ -7,6 +8,10 @@ export type TransactionTag = PrismaTransactionTag & {
     Tag?: Tag
     Transaction?: Transaction
 };
+
+export type WithStartingDate<P = Record> = P & {
+    startingDate: DateParts
+}
 
 export type Transaction = Omit<PrismaTransaction, 'amount' | 'date'> & {
     amount: number

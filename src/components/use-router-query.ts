@@ -1,16 +1,16 @@
 import {useRouter} from 'next/router';
+import {Query, QueryValue, WithQuery} from '../types/query-value';
 
-type QueryValue = number | string | string[];
-type BuildQuery = (queryName: string, value: QueryValue) => { query: Record<string, QueryValue> }
+type BuildQuery = (query: Query) => WithQuery
 type GetQuery = <T extends QueryValue>(queryName: string, fallback?: T) => T;
-type PushQuery = (queryName: string, value: QueryValue, shallow?: boolean) => Promise<void>;
-type UpdateQuery = (queryName: string, value: QueryValue, force?: boolean) => Promise<void>;
+type PushQuery = (query: Query, shallow?: boolean) => Promise<void>;
+type UpdateDuery = (query: Query) => Promise<void>;
 
 type UseRouterQuery = () => {
     buildQuery: BuildQuery
     getQuery: GetQuery
     pushQuery: PushQuery
-    updateQuery: UpdateQuery
+    updateQuery: UpdateDuery
 };
 
 export const useRouterQuery: UseRouterQuery = () => {
@@ -23,25 +23,28 @@ export const useRouterQuery: UseRouterQuery = () => {
         return value as T || fallback;
     };
 
-    const buildQuery: BuildQuery = (queryName, value) => ({
+    const buildQuery: BuildQuery = (query) => ({
         query: {
             ...router.query,
-            [queryName]: value
+            ...query
         }
     });
 
-    const pushQuery: PushQuery = async (queryName, value, shallow) => {
+    const pushQuery: PushQuery = async (query, shallow) => {
         await router.push({
             pathname: router.pathname,
-            ...buildQuery(queryName, value)
+            ...buildQuery(query)
         }, undefined, {
             shallow
         });
     };
 
-    const updateQuery: UpdateQuery = async (queryName, value, force) => {
-        if (!router.query[queryName] || force) {
-            await pushQuery(queryName, value, true);
+    const updateQuery: UpdateDuery = async (query) => {
+        const existingKeys = Object.keys(router.query);
+        const needsUpdate = !Object.keys(query).every((key) => existingKeys.includes(key));
+
+        if (needsUpdate) {
+            await pushQuery(query, true);
         }
     };
 

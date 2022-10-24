@@ -1,26 +1,38 @@
 import Link from 'next/link';
-import {FunctionComponent, useEffect} from 'react';
+import {FunctionComponent, useEffect, useMemo} from 'react';
 import useSWR, {useSWRConfig} from 'swr';
+import {normalizeDate} from '../../services/utils/date';
 import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
-import {Transaction, WithTransactions} from '../../types/transactions';
+import {DateParts} from '../../types/date';
+import {Transaction, WithStartingDate, WithTransactions} from '../../types/transactions';
 import styles from '../table.module.css';
 import {useRouterQuery} from '../use-router-query';
 import {TransactionItem} from './transaction-item';
 
-const pageParam = 'page';
-const sizeParam = 'size';
+const getMonthQuery = (range: DateParts, multiplier: -1 | 1): DateParts => {
+    const {year, month} = normalizeDate({
+        ...range,
+        month: range.month + multiplier * 1
+    });
+
+    return {
+        ...range,
+        month,
+        year
+    };
+};
 
 export const TransactionsList: FunctionComponent = () => {
-    const {buildQuery, getQuery, pushQuery, updateQuery} = useRouterQuery();
-    const currentPage = getQuery(pageParam, 1);
-    const currentSize = getQuery(sizeParam, 50);
+    const {buildQuery, getQuery, updateQuery} = useRouterQuery();
 
-    const swrKey = [swrKeys.transactions, {
-        page: currentPage,
-        size: currentSize
-    }];
-    const {data, error} = useSWR<WithTransactions>(swrKey, doGet);
+    const {data: startingDate} = useSWR<WithStartingDate>(swrKeys.startingDate);
+    const range: DateParts = useMemo(() => ({
+        month: getQuery('month', startingDate.startingDate.month),
+        year: getQuery('year', startingDate.startingDate.year)
+    }), [getQuery, startingDate.startingDate.month, startingDate.startingDate.year]);
+    const swrKey = [swrKeys.transactions, range];
+    const {data: transactions, error} = useSWR<WithTransactions>(swrKey, doGet);
     const {mutate} = useSWRConfig();
 
     const refresh = async (): Promise<void> => {
@@ -28,26 +40,15 @@ export const TransactionsList: FunctionComponent = () => {
     };
 
     useEffect(() => {
-        updateQuery(pageParam, currentPage);
-        updateQuery(sizeParam, currentSize);
-    }, [currentPage, currentSize, updateQuery]);
+        updateQuery(range);
+    }, [range, updateQuery]);
 
     return (
         <>
             {error && 'Failed to load transactions'}
-            {currentPage > 1 && <Link href={buildQuery(pageParam, currentPage - 1)}>{'\u226APrev'}</Link>}
-            {currentPage > 1 && ' '}
-            <Link href={buildQuery(pageParam, currentPage + 1)}>{'Next \u226B'}</Link>
-            {'Show per page: '}
-            <select
-                onChange={(event): Promise<void> => pushQuery(sizeParam, event.target.value)}
-                value={currentSize}
-            >
-                <option value={10}>{10}</option>
-                <option value={25}>{25}</option>
-                <option value={50}>{50}</option>
-                <option value={100}>{100}</option>
-            </select>
+            <Link href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</Link>
+            {' '}
+            <Link href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</Link>
             <table className={styles.table}>
                 <thead>
                     <tr>
@@ -61,7 +62,7 @@ export const TransactionsList: FunctionComponent = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data?.transactions.map((transaction: Transaction) => (
+                    {transactions?.transactions.map((transaction: Transaction) => (
                         <TransactionItem
                             key={transaction.id}
                             onChange={refresh}

@@ -5,14 +5,14 @@ import {Layout} from '../../components/layout';
 import {NavContainer} from '../../components/nav-container';
 import {TransactionsList} from '../../components/transactions/transactions-list';
 import {authenticated, getSessionUser} from '../../services/auth/server-side-auth';
-import {getTransactions} from '../../services/database/transactions';
+import {getStartingDate} from '../../services/database/transactions';
 import {SwrKeys, swrKeys} from '../../services/utils/swr-keys';
 import {PageProps} from '../../types/page';
-import {WithTransactions} from '../../types/transactions';
+import {WithStartingDate} from '../../types/transactions';
 
 type Props = {
     fallback: {
-        [k in SwrKeys['transactions']]: WithTransactions
+        [k in SwrKeys['startingDate']]: WithStartingDate
     }
 }
 
@@ -33,13 +33,13 @@ export default List;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
     const user = await getSessionUser(context);
-    const {page, size} = context.query;
-    const transactions = await getTransactions(user, Number(size), Number(page));
+    const {month, year} = context.query;
+    const startingDate = await getStartingDate(user, month, year);
 
     return {
         props: {
             fallback: {
-                [swrKeys.transactions]: {transactions}
+                [swrKeys.startingDate]: {startingDate}
             },
             title: 'Transactions'
         }

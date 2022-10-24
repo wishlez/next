@@ -1,7 +1,9 @@
 import {Prisma, Transaction as PrismaTransaction} from '@prisma/client';
+import {DateParts} from '../../types/date';
 import {AdjustedOptions} from '../../types/options';
+import {QueryValue} from '../../types/query-value';
 import {Transaction, TransactionTag} from '../../types/transactions';
-import {toDateString} from '../utils/date';
+import {normalizeDate, toDateObject, toDateString} from '../utils/date';
 import {getPrismaClient} from '../utils/prisma';
 
 const prisma = getPrismaClient();
@@ -11,6 +13,34 @@ const serialize = (transaction: PrismaTransaction): Transaction => ({
     amount: transaction.amount.toNumber(),
     date: toDateString(transaction.date)
 });
+
+export const getStartingDate = async (User: Prisma.UserWhereInput, year: QueryValue, month: QueryValue): Promise<DateParts> => {
+    const y: number = Number(year) || NaN;
+    const m: number = Number(month) || NaN;
+
+    if (isNaN(y) || isNaN(m)) {
+        const {_max: {date}} = await prisma.transaction.aggregate({
+            _max: {
+                date: true
+            },
+            where: {
+                User
+            }
+        });
+
+        const dateTime = normalizeDate(date || Date.now());
+
+        return {
+            month: dateTime.month,
+            year: dateTime.year
+        };
+    }
+
+    return {
+        month: m,
+        year: y
+    };
+};
 
 export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Promise<Transaction[]> => {
     let transactions: PrismaTransaction[] = await prisma.$queryRaw<PrismaTransaction[]>`
@@ -57,10 +87,7 @@ export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Pr
     return transactions.map(serialize);
 };
 
-export const getTransactions = async (User: Prisma.UserWhereInput, size: number, page: number): Promise<Transaction[]> => {
-    const take = size || undefined;
-    const skip = ((page - 1) * take) || undefined;
-
+export const getTransactions = async (User: Prisma.UserWhereInput, year: number, month: number): Promise<Transaction[]> => {
     const transactions = await prisma.transaction.findMany({
         include: {
             FromAccount: {
@@ -83,10 +110,12 @@ export const getTransactions = async (User: Prisma.UserWhereInput, size: number,
             {date: 'desc'},
             {id: 'desc'}
         ],
-        skip,
-        take,
         where: {
-            User
+            User,
+            date: {
+                gte: toDateObject(year, month, 1),
+                lt: toDateObject(year, month + 1, 1)
+            }
         }
     });
 

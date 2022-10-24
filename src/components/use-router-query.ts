@@ -1,15 +1,17 @@
-import {useRouter} from 'next/router';
-import {Query, QueryValue, WithQuery} from '../types/query-value';
+import {NextRouter, useRouter} from 'next/router';
+import {Query, QueryValue, WithQuery} from '../types/query';
 
 type BuildQuery = (query: Query) => WithQuery
 type GetQuery = <T extends QueryValue>(queryName: string, fallback?: T) => T;
 type PushQuery = (query: Query, shallow?: boolean) => Promise<void>;
+type ReplaceQuery = (query: Query, shallow?: boolean) => Promise<void>;
 type UpdateQuery = (query: Query) => Promise<void>;
 
 type UseRouterQuery = () => {
     buildQuery: BuildQuery
     getQuery: GetQuery
     pushQuery: PushQuery
+    replaceQuery: ReplaceQuery
     router: NextRouter
     updateQuery: UpdateQuery
 };
@@ -40,12 +42,21 @@ export const useRouterQuery: UseRouterQuery = () => {
         });
     };
 
-    const updateQuery: UpdateDuery = async (query) => {
+    const replaceQuery: PushQuery = async (query, shallow) => {
+        await router.replace({
+            pathname: router.pathname,
+            ...buildQuery(query)
+        }, undefined, {
+            shallow
+        });
+    };
+
+    const updateQuery: UpdateQuery = async (query) => {
         const existingKeys = Object.keys(router.query);
         const needsUpdate = !Object.keys(query).every((key) => existingKeys.includes(key));
 
         if (needsUpdate) {
-            await pushQuery(query, true);
+            await replaceQuery(query, true);
         }
     };
 
@@ -53,6 +64,7 @@ export const useRouterQuery: UseRouterQuery = () => {
         buildQuery,
         getQuery,
         pushQuery,
+        replaceQuery,
         router,
         updateQuery
     };

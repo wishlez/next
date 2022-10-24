@@ -6,6 +6,7 @@ import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {DateParts} from '../../types/date';
 import {WithStartingDate, WithTransactions} from '../../types/transactions';
+import {NavContainer} from '../nav-container';
 import {useRouterQuery} from '../use-router-query';
 import {TransactionsTable} from './transactions-table';
 
@@ -46,11 +47,11 @@ export const TransactionsList: FunctionComponent = () => {
     return (
         <>
             {error && 'Failed to load transactions'}
-            <Link href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</Link>
-            {' '}
-            <Link href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</Link>
-            {' '}
-            <Link href={'search'}>{'Search All'}</Link>
+            <NavContainer>
+                <Link href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</Link>
+                <Link href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</Link>
+                <Link href={'search'}>{'Search All'}</Link>
+            </NavContainer>
             <TransactionsTable
                 onChange={refresh}
                 transactions={transactions?.transactions}

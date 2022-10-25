@@ -60,6 +60,3 @@ export const authenticatedApi = (handler: (user: User) => NextApiHandler): NextA
 
     return unauthorized(res);
 };
-
-export const authorizedApi = async (req: NextApiRequest, userId: number): Promise<boolean> =>
-    userId === (await getSessionUser({req}))?.id;

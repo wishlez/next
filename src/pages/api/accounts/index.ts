@@ -1,5 +1,5 @@
 import {NextApiResponse} from 'next';
-import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
+import {authenticatedApi} from '../../../services/auth/server-side-auth';
 import {createAccount, deleteAccount, getAccount, getAccounts, updateAccount} from '../../../services/database/accounts';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
@@ -19,7 +19,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, account.userId)) {
+        if (user.id !== account.userId) {
             return forbidden(res);
         }
 
@@ -65,7 +65,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, account.userId)) {
+        if (user.id !== account.userId) {
             return forbidden(res);
         }
 

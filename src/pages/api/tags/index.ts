@@ -1,5 +1,5 @@
 import {NextApiResponse} from 'next';
-import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
+import {authenticatedApi} from '../../../services/auth/server-side-auth';
 import {createTag, deleteTag, getTag, getTags, updateTag} from '../../../services/database/tags';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
@@ -19,7 +19,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, tag.userId)) {
+        if (user.id !== tag.userId) {
             return forbidden(res);
         }
 
@@ -61,7 +61,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, tag.userId)) {
+        if (user.id !== tag.userId) {
             return forbidden(res);
         }
 

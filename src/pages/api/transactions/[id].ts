@@ -1,11 +1,11 @@
 import {NextApiResponse} from 'next';
-import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
+import {authenticatedApi} from '../../../services/auth/server-side-auth';
 import {getTransaction} from '../../../services/database/transactions';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
 import {WithTransaction} from '../../../types/transactions';
 
-export default authenticatedApi(() => buildApiHandler({
+export default authenticatedApi((user) => buildApiHandler({
     async get(req, res: NextApiResponse<WithTransaction>) {
         try {
             const id = Number(req.query.id);
@@ -16,7 +16,7 @@ export default authenticatedApi(() => buildApiHandler({
 
             const transaction = await getTransaction(Number(id));
 
-            if (!await authorizedApi(req, transaction.userId)) {
+            if (user.id !== transaction.userId) {
                 return forbidden(res);
             }
 

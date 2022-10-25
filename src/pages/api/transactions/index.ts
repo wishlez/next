@@ -1,5 +1,5 @@
 import {NextApiResponse} from 'next';
-import {authenticatedApi, authorizedApi} from '../../../services/auth/server-side-auth';
+import {authenticatedApi} from '../../../services/auth/server-side-auth';
 import {createTransaction, deleteTransaction, getTransaction, getTransactions, updateTransaction} from '../../../services/database/transactions';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {toDateObject} from '../../../services/utils/date';
@@ -20,7 +20,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, transaction.userId)) {
+        if (user.id !== transaction.userId) {
             return forbidden(res);
         }
 
@@ -66,7 +66,7 @@ export default authenticatedApi((user) => buildApiHandler({
             return notFound(res);
         }
 
-        if (!await authorizedApi(req, transaction.userId)) {
+        if (user.id !== transaction.userId) {
             return forbidden(res);
         }
 

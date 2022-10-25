@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {FunctionComponent} from 'react';
+import {ChangeEvent, FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithTransaction} from '../../types/transactions';
@@ -8,6 +8,9 @@ import {Icon} from '../icon';
 
 type Props = WithTransaction<{
     onChange: () => void
+    selectable?: boolean
+    isSelected?: boolean
+    onSelect?: (event: ChangeEvent<HTMLInputElement>) => void
 }>
 
 export const TransactionItem: FunctionComponent<Props> = (props) => {
@@ -23,6 +26,15 @@ export const TransactionItem: FunctionComponent<Props> = (props) => {
     return (
         <tr>
             <td>
+                {props.selectable && (
+                    <input
+                        checked={props.isSelected}
+                        name={'id'}
+                        onChange={props.onSelect}
+                        type={'checkbox'}
+                        value={props.transaction.id}
+                    />
+                )}
                 {props.transaction.description}
             </td>
             <td>

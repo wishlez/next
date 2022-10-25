@@ -1,18 +1,15 @@
 import {go} from 'fuzzysort';
 import React, {useEffect, useImperativeHandle, useRef, useState} from 'react';
+import {WithId} from '../types/id';
 import {Label} from './label';
-
-type Option<T> = T & {
-    id: number;
-}
 
 type Props<T> = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     label: string,
     onOptionSelect: (option: T) => void
     optionRenderer: (option: T) => React.ReactElement
-    optionSearchKeys: (keyof Option<T>)[]
-    optionSelectedValueKey: keyof Option<T>
-    options: Option<T>[]
+    optionSearchKeys: (keyof WithId<T>)[]
+    optionSelectedValueKey: keyof WithId<T>
+    options: WithId<T>[]
 };
 
 const limitIncrement = (index: number, limit: number): number => index === limit ? limit : index + 1;
@@ -32,14 +29,14 @@ const AutocompleteRenderer = <T, >(props: Props<T>, ref: React.ForwardedRef<HTML
     } = props;
 
     const [activeIndex, setActiveIndex] = useState<number>(0);
-    const [matchedOptions, setMatchedOptions] = useState<Option<T>[]>([]);
+    const [matchedOptions, setMatchedOptions] = useState<WithId<T>[]>([]);
     const inputRef = useRef<HTMLInputElement>();
     const popupRef = useRef<HTMLUListElement>();
 
     const handleInput: React.FormEventHandler<HTMLInputElement> = (event) => {
         onInput?.(event);
 
-        let searchResults: Option<T>[] = [];
+        let searchResults: WithId<T>[] = [];
 
         if (inputRef.current.value.length) {
             searchResults = go(inputRef.current.value, options, {key: optionSearchKeys.join('<::>').split('<::>')})

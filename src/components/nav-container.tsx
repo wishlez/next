@@ -3,7 +3,7 @@ import {FunctionComponent, PropsWithChildren} from 'react';
 export const NavContainer: FunctionComponent<PropsWithChildren> = (props) => (
     <nav
         style={{
-            alignItems: 'center',
+            alignItems: 'baseline',
             display: 'flex',
             gap: '1em',
             listStyle: 'none',

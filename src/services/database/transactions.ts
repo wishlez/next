@@ -164,6 +164,16 @@ export const getTransactions = async (User: Prisma.UserWhereInput, query: Transa
     return transactions.map(serialize);
 };
 
+export const getTransactionsByIds = async (ids: number[]): Promise<PrismaTransaction[]> => {
+    return await prisma.transaction.findMany({
+        where: {
+            id: {
+                in: ids
+            }
+        }
+    });
+};
+
 export const getTransaction = async (id: number): Promise<Transaction> => {
     const transaction = await prisma.transaction.findUnique({
         include: {
@@ -222,3 +232,14 @@ export const updateTransaction = async (data: Prisma.TransactionUncheckedUpdateI
         id: data.id as number
     }
 }));
+
+export const updateTransactionsDescription = async (ids: number[], description: string): Promise<Prisma.BatchPayload> => await prisma.transaction.updateMany({
+    data: {
+        description
+    },
+    where: {
+        id: {
+            in: ids
+        }
+    }
+});

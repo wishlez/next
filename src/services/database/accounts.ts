@@ -53,6 +53,10 @@ export const getAccount = async (id: number): Promise<Account> => {
         }
     });
 
+    if (!account) {
+        return null;
+    }
+
     return serialize(account);
 };
 

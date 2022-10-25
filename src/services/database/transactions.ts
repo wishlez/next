@@ -178,6 +178,10 @@ export const getTransaction = async (id: number): Promise<Transaction> => {
         }
     });
 
+    if (!transaction) {
+        return null;
+    }
+
     return serialize(transaction);
 };
 

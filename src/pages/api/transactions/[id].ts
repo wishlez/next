@@ -2,7 +2,7 @@ import {NextApiResponse} from 'next';
 import {authenticatedApi} from '../../../services/auth/server-side-auth';
 import {getTransaction} from '../../../services/database/transactions';
 import {buildApiHandler} from '../../../services/utils/build-api-handler';
-import {badRequest, forbidden, internalServerError} from '../../../services/utils/handle-error';
+import {badRequest, forbidden, internalServerError, notFound} from '../../../services/utils/handle-error';
 import {WithTransaction} from '../../../types/transactions';
 
 export default authenticatedApi((user) => buildApiHandler({
@@ -15,6 +15,10 @@ export default authenticatedApi((user) => buildApiHandler({
             }
 
             const transaction = await getTransaction(Number(id));
+
+            if (!transaction) {
+                return notFound(res);
+            }
 
             if (user.id !== transaction.userId) {
                 return forbidden(res);

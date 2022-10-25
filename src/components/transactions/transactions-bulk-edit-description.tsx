@@ -3,6 +3,7 @@ import {doPut} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Dialog} from '../../types/dialog';
 import {Label} from '../label';
+import {TransactionsBulkEditDialog} from './transactions-bulk-edit-dialog';
 
 type Props = {
     ids: number[]
@@ -30,29 +31,21 @@ export const TransactionsBulkEditDescription: FunctionComponent<Props> = (props)
     };
 
     return (
-        <>
-            <button onClick={(): void => dialogRef.current.showModal()}>{'Description'}</button>
-            <dialog
-                onClose={handleClose}
-                ref={dialogRef}
-            >
-                <Label>
-                    {'Enter new description'}
-                    <input
-                        autoFocus
-                        name={'description'}
-                        placeholder={'New description'}
-                        ref={descriptionRef}
-                        type={'text'}
-                    />
-                </Label>
-                <form method={'dialog'}>
-                    <button value={'cancel'}>
-                        {'Cancel'}
-                    </button>
-                    <button value={'update'}>{'Update'}</button>
-                </form>
-            </dialog>
-        </>
+        <TransactionsBulkEditDialog
+            buttonText={'Description'}
+            onClose={handleClose}
+            ref={dialogRef}
+        >
+            <Label>
+                {'Enter new description'}
+                <input
+                    autoFocus
+                    name={'description'}
+                    placeholder={'New description'}
+                    ref={descriptionRef}
+                    type={'text'}
+                />
+            </Label>
+        </TransactionsBulkEditDialog>
     );
 };

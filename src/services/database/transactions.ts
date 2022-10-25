@@ -243,3 +243,14 @@ export const updateTransactionsDescription = async (ids: number[], description: 
         }
     }
 });
+
+export const updateTransactionsAccount = async (ids: number[], account: 'fromAccountId' | 'toAccountId', id: number): Promise<Prisma.BatchPayload> => await prisma.transaction.updateMany({
+    data: {
+        [account]: id
+    },
+    where: {
+        id: {
+            in: ids
+        }
+    }
+});

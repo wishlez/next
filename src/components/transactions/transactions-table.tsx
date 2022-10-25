@@ -1,11 +1,10 @@
 import {useRouter} from 'next/router';
 import {ComponentProps, FunctionComponent} from 'react';
 import {Transaction} from '../../types/transactions';
-import {NavContainer} from '../nav-container';
 import styles from '../table.module.css';
 import {useSelection} from '../use-selection';
 import {TransactionItem} from './transaction-item';
-import {TransactionsBulkEditDescription} from './transactions-bulk-edit-description';
+import {TransactionsBulkEditControls} from './transactions-bulk-edit-controls';
 
 type Props = {
     onChange: ComponentProps<typeof TransactionItem>['onChange']
@@ -26,13 +25,10 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
     return (
         <>
             {props.selectable && (
-                <NavContainer>
-                    <span style={{paddingLeft: '1.5em'}}>{'\u21B1 With selected, update:'}</span>
-                    <TransactionsBulkEditDescription
-                        ids={props.selected}
-                        onUpdate={router.reload}
-                    />
-                </NavContainer>
+                <TransactionsBulkEditControls
+                    ids={props.selected}
+                    onUpdate={router.reload}
+                />
             )}
             <table className={styles.table}>
                 <thead>

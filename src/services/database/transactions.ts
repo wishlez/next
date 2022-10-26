@@ -1,4 +1,4 @@
-import {Prisma, Transaction as PrismaTransaction} from '@prisma/client';
+import {Prisma, PrismaPromise, Transaction as PrismaTransaction} from '@prisma/client';
 import {DateParts} from '../../types/date';
 import {AdjustedOptions} from '../../types/options';
 import {QueryValue} from '../../types/query';
@@ -214,7 +214,7 @@ export const deleteTransaction = async (id: number): Promise<void> => {
     });
 };
 
-export const updateTransaction = async (data: Prisma.TransactionUncheckedUpdateInput, tags: AdjustedOptions): Promise<Transaction> => serialize(await prisma.transaction.update({
+const updateSingleTransaction = (data: Prisma.TransactionUncheckedUpdateInput, tags: AdjustedOptions<number>): PrismaPromise<PrismaTransaction> => prisma.transaction.update({
     data: {
         ...data,
         TransactionTag: {
@@ -231,7 +231,9 @@ export const updateTransaction = async (data: Prisma.TransactionUncheckedUpdateI
     where: {
         id: data.id as number
     }
-}));
+});
+
+export const updateTransaction = async (data: Prisma.TransactionUncheckedUpdateInput, tags: AdjustedOptions): Promise<Transaction> => serialize(await updateSingleTransaction(data, tags));
 
 export const updateTransactionsDescription = async (ids: number[], description: string): Promise<Prisma.BatchPayload> => await prisma.transaction.updateMany({
     data: {
@@ -254,3 +256,6 @@ export const updateTransactionsAccount = async (ids: number[], account: 'fromAcc
         }
     }
 });
+
+export const updateTransactionTags = async (ids: number[], tags: AdjustedOptions): Promise<PrismaTransaction[]> =>
+    await prisma.$transaction(ids.map((id) => updateSingleTransaction({id}, tags)));

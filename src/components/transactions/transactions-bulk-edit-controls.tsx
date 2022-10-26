@@ -2,6 +2,7 @@ import {FunctionComponent} from 'react';
 import {NavContainer} from '../nav-container';
 import {TransactionsBulkEditAccount} from './transactions-bulk-edit-account';
 import {TransactionsBulkEditDescription} from './transactions-bulk-edit-description';
+import {TransactionsBulkEditTag} from './transactions-bulk-edit-tags';
 
 type Props = {
     ids: number[]
@@ -24,6 +25,16 @@ export const TransactionsBulkEditControls: FunctionComponent<Props> = (props) =>
             ids={props.ids}
             onUpdate={props.onUpdate}
             type={'to'}
+        />
+        <TransactionsBulkEditTag
+            ids={props.ids}
+            onUpdate={props.onUpdate}
+            type={'add'}
+        />
+        <TransactionsBulkEditTag
+            ids={props.ids}
+            onUpdate={props.onUpdate}
+            type={'delete'}
         />
     </NavContainer>
 );

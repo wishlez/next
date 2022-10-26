@@ -1,6 +1,6 @@
 import {FunctionComponent, useRef} from 'react';
 import useSWR from 'swr';
-import {doPut} from '../../services/utils/fetch';
+import {doPatch} from '../../services/utils/fetch';
 import {getOptions} from '../../services/utils/options';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithAccounts} from '../../types/accounts';
@@ -22,7 +22,7 @@ export const TransactionsBulkEditAccount: FunctionComponent<Props> = (props) => 
     const accountOptions = getOptions(accounts?.accounts, 'name', 'id');
 
     const updateTransactions = async (): Promise<void> => {
-        await doPut(swrKeys.transactionsAccount, {
+        await doPatch(swrKeys.transactionsAccount, {
             accountId: Number(accountRef.current.value),
             ids: props.ids,
             type: props.type

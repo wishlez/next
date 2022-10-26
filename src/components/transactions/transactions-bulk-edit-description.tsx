@@ -1,5 +1,5 @@
 import {FunctionComponent, useRef} from 'react';
-import {doPut} from '../../services/utils/fetch';
+import {doPatch} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Dialog} from '../../types/dialog';
 import {Label} from '../label';
@@ -15,7 +15,7 @@ export const TransactionsBulkEditDescription: FunctionComponent<Props> = (props)
     const descriptionRef = useRef<HTMLInputElement>();
 
     const updateTransactions = async (): Promise<void> => {
-        await doPut(swrKeys.transactionsDescription, {
+        await doPatch(swrKeys.transactionsDescription, {
             description: descriptionRef.current.value,
             ids: props.ids
         });

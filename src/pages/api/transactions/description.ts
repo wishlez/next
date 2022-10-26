@@ -5,7 +5,7 @@ import {buildApiHandler} from '../../../services/utils/build-api-handler';
 import {forbidden, internalServerError} from '../../../services/utils/handle-error';
 
 export default authenticatedApi((user) => buildApiHandler({
-    async put(req, res: NextApiResponse<Record<'count', number>>) {
+    async patch(req, res: NextApiResponse<Record<'count', number>>) {
         try {
             const ids: number[] = req.body.ids;
             const description: string = req.body.description;

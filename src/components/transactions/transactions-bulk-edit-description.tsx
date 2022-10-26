@@ -15,7 +15,7 @@ export const TransactionsBulkEditDescription: FunctionComponent<Props> = (props)
     const descriptionRef = useRef<HTMLInputElement>();
 
     const updateTransactions = async (): Promise<void> => {
-        await doPut(swrKeys.transactionsEdit.description, {
+        await doPut(swrKeys.transactionsDescription, {
             description: descriptionRef.current.value,
             ids: props.ids
         });

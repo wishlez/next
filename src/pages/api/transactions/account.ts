@@ -1,14 +1,15 @@
 import {NextApiResponse} from 'next';
-import {authenticatedApi} from '../../../../services/auth/server-side-auth';
-import {getTransactionsByIds, updateTransactionsDescription} from '../../../../services/database/transactions';
-import {buildApiHandler} from '../../../../services/utils/build-api-handler';
-import {forbidden, internalServerError} from '../../../../services/utils/handle-error';
+import {authenticatedApi} from '../../../services/auth/server-side-auth';
+import {getTransactionsByIds, updateTransactionsAccount} from '../../../services/database/transactions';
+import {buildApiHandler} from '../../../services/utils/build-api-handler';
+import {forbidden, internalServerError} from '../../../services/utils/handle-error';
 
 export default authenticatedApi((user) => buildApiHandler({
     async put(req, res: NextApiResponse<Record<'count', number>>) {
         try {
             const ids: number[] = req.body.ids;
-            const description: string = req.body.description;
+            const accountId: number = req.body.accountId;
+            const type = req.body.type as 'from' | 'to';
 
             const transactions = await getTransactionsByIds(ids);
 
@@ -16,7 +17,7 @@ export default authenticatedApi((user) => buildApiHandler({
                 return forbidden(res);
             }
 
-            const {count} = await updateTransactionsDescription(ids, description);
+            const {count} = await updateTransactionsAccount(ids, `${type}AccountId`, accountId);
 
             return res.send({count});
         } catch (err) {

@@ -1,4 +1,4 @@
-export type Parameterized<A extends SwrKeys[keyof SwrKeys]> = A extends string ? `${A}/${string}` : A extends Record<string, string> ? `${A[keyof A]}/${string}` : never;
+export type Parameterized<A extends SwrKeys[keyof SwrKeys]> = A extends string ? `${A}/${string}` : never;
 
 export type SwrKeys = typeof swrKeys;
 
@@ -9,10 +9,7 @@ export const swrKeys = {
     tags: '/api/tags',
     transactionSuggestions: '/api/transactions/suggestions',
     transactions: '/api/transactions',
-    transactionsEdit: {
-        description: '/api/transactions/edit/description',
-        fromAccount: '/api/transactions/edit/account?type=from',
-        tags: '/api/transactions/edit/tags',
-        toAccount: '/api/transactions/edit/account?type=to'
-    }
+    transactionsAccount: '/api/transactions/account',
+    transactionsDescription: '/api/transactions/description',
+    transactionsTags: '/api/transactions/tags',
 } as const;

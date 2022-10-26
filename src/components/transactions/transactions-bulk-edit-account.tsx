@@ -22,9 +22,10 @@ export const TransactionsBulkEditAccount: FunctionComponent<Props> = (props) => 
     const accountOptions = getOptions(accounts?.accounts, 'name', 'id');
 
     const updateTransactions = async (): Promise<void> => {
-        await doPut(swrKeys.transactionsEdit[`${props.type}Account`], {
+        await doPut(swrKeys.transactionsAccount, {
             accountId: Number(accountRef.current.value),
-            ids: props.ids
+            ids: props.ids,
+            type: props.type
         });
     };
 

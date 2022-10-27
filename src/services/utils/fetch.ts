@@ -1,8 +1,9 @@
+import {Query} from '../../types/query';
+
 type LoadedMethod = 'POST' | 'PUT' | 'PATCH';
 type QueriedMethod = 'GET' | 'DELETE';
 
 type Payload = Record<any, any>;
-type Query = Record<string, string>;
 
 type LoadedFetch = <T>(url: string, payload: Payload, method: LoadedMethod) => Promise<T>;
 type QueriedFetch = <T>(url: string, payload: Query, method: QueriedMethod) => Promise<T>;
@@ -29,8 +30,22 @@ class ResponseError extends Error implements ResponseErrorType {
     }
 }
 
+const serializeQuery = (query: Query): string[][] => {
+    return Object.entries(query).reduce((params, [key, value]) => {
+        if (typeof value === 'number') {
+            return params.concat([[key, value.toString()]]);
+        } else if (Array.isArray(value)) {
+            return params.concat(value.map((val) => [key, val]));
+        } else if (!value) {
+            return params;
+        } else {
+            return params.concat([[key, value]]);
+        }
+    }, []);
+};
+
 const toParams = (query: Query): string => {
-    const params = new URLSearchParams(query).toString();
+    const params = new URLSearchParams(serializeQuery(query)).toString();
 
     return params ? `?${params}` : '';
 };

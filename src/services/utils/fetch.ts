@@ -45,7 +45,7 @@ const serializeQuery = (query: Query): string[][] => {
 };
 
 const toParams = (query: Query): string => {
-    const params = new URLSearchParams(serializeQuery(query)).toString();
+    const params = new URLSearchParams(serializeQuery(query ?? {})).toString();
 
     return params ? `?${params}` : '';
 };

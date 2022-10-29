@@ -25,55 +25,58 @@ export const TransactionsFilterForm: FunctionComponent = () => {
                 <div
                     style={{
                         alignItems: 'end',
-                        display: 'flex',
-                        flexWrap: 'wrap'
+                        display: 'grid',
+                        gridTemplateColumns: 'fit-content(100px) fit-content(100px)'
                     }}
                 >
-                    <Label>
-                        {'Enter description'}
-                        <input
-                            defaultValue={query.description}
-                            name={'description'}
-                            placeholder={'+made -payment'}
-                            type={'text'}
-                        />
-                    </Label>
-                    <Label>
-                        {'Select a year'}
-                        <select
-                            defaultValue={query.year}
-                            name={'year'}
-                        >
-                            <option value={''}>{'All'}</option>
-                            {getYearOptions()}
-                        </select>
-                    </Label>
-                    <Label>
-                        {'Select a month'}
-                        <select
-                            defaultValue={query.month}
-                            name={'month'}
-                        >
-                            <option value={''}>{'All'}</option>
-                            {getMonthOptions()}
-                        </select>
-                    </Label>
-                    <Label>
-                        {'Select an account'}
-                        <select
-                            defaultValue={query.accountId}
-                            name={'accountId'}
-                        >
-                            <option value={''}>{'All'}</option>
-                            {accountOptions}
-                        </select>
-                    </Label>
+                    <div>
+                        <Label>
+                            {'Enter description'}
+                            <input
+                                defaultValue={query.description}
+                                name={'description'}
+                                placeholder={'+made -payment'}
+                                type={'text'}
+                            />
+                        </Label>
+                        <Label>
+                            {'Select a year'}
+                            <select
+                                defaultValue={query.year}
+                                name={'year'}
+                            >
+                                <option value={''}>{'All'}</option>
+                                {getYearOptions()}
+                            </select>
+                        </Label>
+                        <Label>
+                            {'Select a month'}
+                            <select
+                                defaultValue={query.month}
+                                name={'month'}
+                            >
+                                <option value={''}>{'All'}</option>
+                                {getMonthOptions()}
+                            </select>
+                        </Label>
+                        <Label>
+                            {'Select an account'}
+                            <select
+                                defaultValue={query.accountId}
+                                name={'accountId'}
+                            >
+                                <option value={''}>{'All'}</option>
+                                {accountOptions}
+                            </select>
+                        </Label>
+                    </div>
                     <Label>
                         {'Select tag(s)'}
                         <select
                             defaultValue={[].concat(query.tagId)}
                             multiple
                             name={'tagId'}
+                            size={10}
                         >
                             <option value={''}>{'All'}</option>
                             <option value={0}>{'None'}</option>

@@ -55,6 +55,7 @@ export const TransactionsBulkEditTag: FunctionComponent<Props> = (props) => {
                     multiple
                     name={'tagId'}
                     ref={tagsRef}
+                    size={10}
                 >
                     {tagOptions}
                 </select>

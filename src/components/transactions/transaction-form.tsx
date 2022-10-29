@@ -135,6 +135,7 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                         multiple
                         name={'tags'}
                         ref={tagsRef}
+                        size={10}
                     >
                         {tagOptions}
                     </select>

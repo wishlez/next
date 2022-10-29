@@ -14,6 +14,7 @@ export const getAccounts = async (User: Prisma.UserWhereInput): Promise<Account[
     const accounts = await prisma.account.findMany({
         orderBy: [
             {builtIn: 'desc'},
+            {accountType: 'asc'},
             {name: 'asc'}
         ],
         where: {

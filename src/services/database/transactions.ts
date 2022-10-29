@@ -1,7 +1,6 @@
 import {Prisma, PrismaPromise, Transaction as PrismaTransaction} from '@prisma/client';
 import {DateParts} from '../../types/date';
 import {AdjustedOptions} from '../../types/options';
-import {QueryValue} from '../../types/query';
 import {Transaction, TransactionQuery, TransactionTag} from '../../types/transactions';
 import {normalizeDate, toDateObject, toDateString} from '../utils/date';
 import {parseQueryNumber, parseQueryNumbers} from '../utils/number';
@@ -62,18 +61,16 @@ const buildTransactionsCondition = (query: TransactionQuery): Prisma.Transaction
     };
 };
 
-export const getStartingDate = async (User: Prisma.UserWhereInput, year: QueryValue, month: QueryValue): Promise<DateParts> => {
-    const y: number = Number(year) || NaN;
-    const m: number = Number(month) || NaN;
+export const getStartingDate = async (User: Prisma.UserWhereInput, query: TransactionQuery): Promise<DateParts> => {
+    const y: number = Number(query.year) || NaN;
+    const m: number = Number(query.month) || NaN;
 
     if (isNaN(y) || isNaN(m)) {
         const {_max: {date}} = await prisma.transaction.aggregate({
             _max: {
                 date: true
             },
-            where: {
-                User
-            }
+            where: buildTransactionsCondition(query)
         });
 
         const dateTime = normalizeDate(date || Date.now());
@@ -92,19 +89,17 @@ export const getStartingDate = async (User: Prisma.UserWhereInput, year: QueryVa
 
 export const getTransactionSuggestions = async (User: Prisma.UserWhereInput): Promise<Transaction[]> => {
     let transactions: PrismaTransaction[] = await prisma.$queryRaw<PrismaTransaction[]>`
-        SELECT t.* FROM
-            Transaction t,
-            (
-                SELECT description, fromAccountId, toAccountId, MAX(DATE) maxDate FROM Transaction
-                WHERE userId = ${User.id}
-                GROUP BY description, fromAccountId, toAccountId
-            ) m
-        WHERE
-            userId = ${User.id}
-            AND t.description = m.description
-            AND t.fromAccountId = m.fromAccountId
-            AND t.toAccountId = m.toAccountId
-            AND t.date = m.maxDate
+        SELECT t.*
+        FROM Transaction t,
+             (SELECT description, fromAccountId, toAccountId, MAX(DATE) maxDate
+              FROM Transaction
+              WHERE userId = ${User.id}
+              GROUP BY description, fromAccountId, toAccountId) m
+        WHERE userId = ${User.id}
+          AND t.description = m.description
+          AND t.fromAccountId = m.fromAccountId
+          AND t.toAccountId = m.toAccountId
+          AND t.date = m.maxDate
         ORDER BY DATE DESC
     `;
 

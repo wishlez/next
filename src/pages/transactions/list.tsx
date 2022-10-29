@@ -33,8 +33,7 @@ export default List;
 
 export const getServerSideProps = authenticated<PageProps<Props>>(async (context) => {
     const user = await getSessionUser(context);
-    const {month, year} = context.query;
-    const startingDate = await getStartingDate(user, month, year);
+    const startingDate = await getStartingDate(user, context.query);
 
     return {
         props: {

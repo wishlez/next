@@ -40,7 +40,7 @@ export const TagItem: FunctionComponent<Props> = (props) => {
                 />
             ) : (
                 <>
-                    <Link href={`/transactions/list?tagId=${props.tag.id}`}>{props.tag.name}</Link>
+                    <Link href={`/transactions/search?tagId=${props.tag.id}`}>{props.tag.name}</Link>
                     {'\u00A0'}
                     <button
                         onClick={startEditing}

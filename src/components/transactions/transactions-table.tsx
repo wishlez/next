@@ -1,4 +1,3 @@
-import {useRouter} from 'next/router';
 import {ComponentProps, FunctionComponent} from 'react';
 import {Transaction} from '../../types/transactions';
 import styles from '../table.module.css';
@@ -15,7 +14,6 @@ type Props = {
 }
 
 export const TransactionsTable: FunctionComponent<Props> = (props) => {
-    const router = useRouter();
     const {handleSelectAll, handleSelectOne, selectAllRef} = useSelection({
         all: props.transactions,
         onSelectionChange: props.onSelect,
@@ -27,7 +25,7 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
             {props.selectable && (
                 <TransactionsBulkEditControls
                     ids={props.selected}
-                    onUpdate={router.reload}
+                    onUpdate={props.onChange}
                 />
             )}
             <table className={styles.table}>

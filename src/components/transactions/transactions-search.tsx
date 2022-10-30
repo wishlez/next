@@ -1,23 +1,36 @@
-import {useRouter} from 'next/router';
 import {FunctionComponent, useState} from 'react';
 import useSWR from 'swr';
+import {doGet} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
-import {WithTransactions} from '../../types/transactions';
+import {TransactionQuery, WithTransactions} from '../../types/transactions';
+import {useRouterQuery} from '../use-router-query';
 import {TransactionsFilterForm} from './transactions-filter-form';
 import {TransactionsTable} from './transactions-table';
 
+const shouldFetch = (query: TransactionQuery): boolean =>
+    [query.description, query.year, query.month, query.tagId, query.accountId].some((value) => value);
+
 export const TransactionsSearch: FunctionComponent = () => {
-    const router = useRouter();
-    const {data: transactions, error} = useSWR<WithTransactions>(swrKeys.transactions);
+    const {router, updateQuery} = useRouterQuery();
+    const swrKey = [swrKeys.transactions, router.query];
+    const {
+        data: transactions,
+        error,
+        mutate
+    } = useSWR<WithTransactions>(shouldFetch(router.query) ? swrKey : null, doGet);
     const [selected, setSelected] = useState<number[]>([]);
+
+    const refresh = async (): Promise<void> => {
+        await mutate(swrKey);
+    };
 
     return (
         <>
-            <TransactionsFilterForm/>
+            <TransactionsFilterForm onSubmit={updateQuery}/>
             {error && 'Failed to load transactions'}
-            {!transactions?.transactions.length ? 'Update/apply the filters to see transactions' : (
+            {!transactions?.transactions?.length ? 'Update/apply the filters to see transactions' : (
                 <TransactionsTable
-                    onChange={(): void => router.reload()}
+                    onChange={refresh}
                     onSelect={setSelected}
                     selectable
                     selected={selected}

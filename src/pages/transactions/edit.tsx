@@ -45,7 +45,7 @@ export const getServerSideProps = authenticated<PageProps<Props>>(async (context
                 [swrKeys.accounts]: {accounts},
                 [swrKeys.tags]: {tags}
             },
-            title: 'Add new transaction'
+            title: `Edit #${transaction.id}`
         }
     });
 });

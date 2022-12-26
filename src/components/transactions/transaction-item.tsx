@@ -54,9 +54,9 @@ export const TransactionItem: FunctionComponent<Props> = (props) => {
             </td>
             <td>
                 <Link href={`edit?id=${props.transaction.id}`}>
-                    <button type={'button'}>
+                    <a>
                         <Icon name={'edit'}/>
-                    </button>
+                    </a>
                 </Link>
                 <button
                     onClick={handleDelete}

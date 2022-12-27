@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import React, {FunctionComponent, SyntheticEvent, useRef} from 'react';
 import useSWR from 'swr';
 import {doGet} from '../../services/utils/fetch';
@@ -141,32 +142,38 @@ export const TransactionForm: FunctionComponent<Props> = (props) => {
                     </select>
                 </Label>
             </div>
-            <div>
-                <button
-                    onClick={props.onCancel}
-                    type={'button'}
-                >
+            <ButtonGroup>
+                <Button onClick={props.onCancel}>
                     {'Cancel'}
-                </button>
-                {props.transaction ? <button type={'submit'}>{'Update'}</button> : (
+                </Button>
+                {props.transaction ? (
+                    <Button
+                        shade={'primary'}
+                        type={'submit'}
+                    >
+                        {'Update'}
+                    </Button>
+                ) : (
                     <>
-                        <button
+                        <Button
                             name={'continue'}
+                            shade={'primary'}
                             type={'submit'}
                             value={'yes'}
                         >
                             {'Add more'}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             name={'continue'}
+                            shade={'primary'}
                             type={'submit'}
                             value={'no'}
                         >
                             {'Add one'}
-                        </button>
+                        </Button>
                     </>
                 )}
-            </div>
+            </ButtonGroup>
         </form>
     );
 };

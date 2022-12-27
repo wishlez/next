@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import {FormEvent, FunctionComponent, useRef} from 'react';
 import useSWR from 'swr';
 import {swrKeys} from '../../services/utils/swr-keys';
@@ -86,17 +87,20 @@ export const AccountForm: FunctionComponent<Props> = (props) => {
                     </select>
                 </Label>
             </div>
-            <div>
-                <button
+            <ButtonGroup>
+                <Button
                     onClick={props.onCancel}
                     type={'button'}
                 >
                     {'Cancel'}
-                </button>
-                <button type={'submit'}>
+                </Button>
+                <Button
+                    shade={'primary'}
+                    type={'submit'}
+                >
                     {props.account ? 'Update' : 'Create'}
-                </button>
-            </div>
+                </Button>
+            </ButtonGroup>
         </form>
     );
 };

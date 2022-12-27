@@ -1,5 +1,6 @@
+import {Button, ButtonGroup, Link} from '@wishlez/ui';
 import {getCsrfToken} from 'next-auth/react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import {FunctionComponent} from 'react';
 import {unauthenticated} from '../../services/auth/server-side-auth';
 import {PageProps} from '../../types/page';
@@ -35,14 +36,19 @@ const SignIn: FunctionComponent<Props> = ({csrfToken}) => (
                 type={'password'}
             />
         </label>
-        <div>
-            <Link href={'/auth/sign-up'}>
-                {'Sign Up'}
-            </Link>
-            <button type={'submit'}>
+        <ButtonGroup>
+            <NextLink href={'/auth/sign-up'}>
+                <Button as={Link}>
+                    {'Sign Up'}
+                </Button>
+            </NextLink>
+            <Button
+                shade={'primary'}
+                type={'submit'}
+            >
                 {'Sign In'}
-            </button>
-        </div>
+            </Button>
+        </ButtonGroup>
     </form>
 );
 

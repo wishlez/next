@@ -1,4 +1,5 @@
 import 'material-symbols/rounded.css';
+import {Theme} from '@wishlez/ui';
 import {SessionProvider} from 'next-auth/react';
 import type {AppProps} from 'next/app';
 import Head from 'next/head';
@@ -15,7 +16,9 @@ const App: FunctionComponent<AppProps<PageProps>> = ({Component, pageProps}) => 
                 </title>
             </Head>
             <SessionProvider session={pageProps.session}>
-                <Component {...pageProps}/>
+                <Theme>
+                    <Component {...pageProps}/>
+                </Theme>
             </SessionProvider>
         </>
     );

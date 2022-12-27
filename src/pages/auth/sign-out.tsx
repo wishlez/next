@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import {getCsrfToken} from 'next-auth/react';
 import {useRouter} from 'next/router';
 import {FunctionComponent} from 'react';
@@ -23,15 +24,17 @@ const SignOut: FunctionComponent<Props> = ({csrfToken}) => {
                     type={'hidden'}
                     value={csrfToken}
                 />
-                <button
-                    onClick={(): void => router.back()}
-                    type={'button'}
-                >
-                    {'Go back'}
-                </button>
-                <button type={'submit'}>
-                    {'Continue'}
-                </button>
+                <ButtonGroup>
+                    <Button onClick={(): void => router.back()}>
+                        {'Go back'}
+                    </Button>
+                    <Button
+                        shade={'primary'}
+                        type={'submit'}
+                    >
+                        {'Continue'}
+                    </Button>
+                </ButtonGroup>
             </form>
         </>
     );

@@ -19,6 +19,7 @@
   "dependencies": {
     "@prisma/client": "^4.4.0",
     "@types/luxon": "^3.0.2",
+    "@wishlez/ui": "^1.0.0-rc.8",
     "bignumber.js": "^9.1.0",
     "fuzzysort": "^2.0.1",
     "luxon": "^3.0.4",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/node": "18.7.23",
     "@types/react": "18.0.21",
+    "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "eslint": "8.22.0",

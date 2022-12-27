@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import {Button, ButtonGroup, Link} from '@wishlez/ui';
+import NextLink from 'next/link';
 import {FunctionComponent, useRef} from 'react';
 import {unauthenticated} from '../../services/auth/server-side-auth';
 import {PageProps} from '../../types/page';
@@ -56,14 +57,19 @@ const SignUp: FunctionComponent = () => {
                     type={'password'}
                 />
             </label>
-            <div>
-                <Link href={'/auth/sign-in'}>
-                    {'Sign In'}
-                </Link>
-                <button type={'submit'}>
+            <ButtonGroup>
+                <NextLink href={'/auth/sign-in'}>
+                    <Button as={Link}>
+                        {'Sign In'}
+                    </Button>
+                </NextLink>
+                <Button
+                    shade={'primary'}
+                    type={'submit'}
+                >
                     {'Sign Up'}
-                </button>
-            </div>
+                </Button>
+            </ButtonGroup>
         </form>
     );
 };

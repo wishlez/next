@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import {forwardRef, PropsWithChildren, useImperativeHandle, useRef} from 'react';
 import {Dialog} from '../../types/dialog';
 
@@ -13,17 +14,28 @@ export const TransactionsBulkEditDialog = forwardRef<Dialog, PropsWithChildren<P
 
     return (
         <>
-            <button onClick={(): void => dialogRef.current.showModal()}>{props.buttonText}</button>
+            <Button onClick={(): void => dialogRef.current.showModal()}>{props.buttonText}</Button>
             <dialog
                 onClose={props.onClose}
                 ref={dialogRef}
             >
                 <form method={'dialog'}>
                     {props.children}
-                    <button value={'update'}>{'Update'}</button>
-                    <button value={'cancel'}>
-                        {'Cancel'}
-                    </button>
+                    <ButtonGroup>
+                        <Button
+                            type={'submit'}
+                            value={'cancel'}
+                        >
+                            {'Cancel'}
+                        </Button>
+                        <Button
+                            shade={'primary'}
+                            type={'submit'}
+                            value={'update'}
+                        >
+                            {'Update'}
+                        </Button>
+                    </ButtonGroup>
                 </form>
             </dialog>
         </>

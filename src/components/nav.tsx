@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {FunctionComponent} from 'react';
-import {Icon} from './icon';
+import {Icon} from '@wishlez/ui';
 import {NavContainer} from './nav-container';
 
 export const Nav: FunctionComponent = () => (

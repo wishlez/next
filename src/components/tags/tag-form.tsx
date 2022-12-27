@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import {FormEvent, FunctionComponent, useRef} from 'react';
 import {Tag, TagRequest} from '../../types/tags';
 
@@ -54,12 +55,17 @@ export const TagForm: FunctionComponent<Props> = (props) => {
                     type={'text'}
                 />
             </label>
-            <button type={'reset'}>
-                {'Cancel'}
-            </button>
-            <button type={'submit'}>
-                {props.tag ? 'Update' : 'Create'}
-            </button>
+            <ButtonGroup>
+                <Button type={'reset'}>
+                    {'Cancel'}
+                </Button>
+                <Button
+                    shade={'primary'}
+                    type={'submit'}
+                >
+                    {props.tag ? 'Update' : 'Create'}
+                </Button>
+            </ButtonGroup>
         </form>
     );
 };

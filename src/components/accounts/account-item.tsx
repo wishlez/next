@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import {ButtonGroup, Icon, IconButton, Link} from '@wishlez/ui';
+import NextLink from 'next/link';
 import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Account, WithAccount} from '../../types/accounts';
-import {Icon} from '../icon';
 import {AccountBalance} from './account-balance';
 
 type Props = WithAccount<{
@@ -26,7 +26,7 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
         <tr>
             <td>
                 {props.account.builtIn ? props.account.name : (
-                    <Link href={`/transactions/list?accountId=${props.account.id}`}>{props.account.name}</Link>
+                    <NextLink href={`/transactions/list?accountId=${props.account.id}`}>{props.account.name}</NextLink>
                 )}
             </td>
             <td>
@@ -39,19 +39,18 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
                 {props.account.builtIn ? (
                     <Icon name={'lock'}/>
                 ) : (
-                    <>
-                        <Link href={`edit?id=${props.account.id}`}>
-                            <button type={'button'}>
-                                <Icon name={'edit'}/>
-                            </button>
-                        </Link>
-                        <button
+                    <ButtonGroup>
+                        <NextLink href={`edit?id=${props.account.id}`}>
+                            <IconButton
+                                as={Link}
+                                iconName={'edit'}
+                            />
+                        </NextLink>
+                        <IconButton
+                            iconName={'delete'}
                             onClick={handleDelete}
-                            type={'button'}
-                        >
-                            <Icon name={'delete'}/>
-                        </button>
-                    </>
+                        />
+                    </ButtonGroup>
                 )}
             </td>
         </tr>

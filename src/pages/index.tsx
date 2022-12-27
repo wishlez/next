@@ -1,3 +1,4 @@
+import {Button} from '@wishlez/ui';
 import {signIn, useSession} from 'next-auth/react';
 import {useRouter} from 'next/router';
 import {FunctionComponent, useEffect} from 'react';
@@ -17,7 +18,7 @@ const Home: FunctionComponent<PageProps> = () => {
     return (
         <>
             {'Welcome! '}
-            <button onClick={(): Promise<any> => signIn()}>{'Sign In'}</button>
+            <Button onClick={(): Promise<any> => signIn()}>{'Sign In'}</Button>
             {' to continue...'}
         </>
     );

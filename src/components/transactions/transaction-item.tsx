@@ -1,10 +1,10 @@
-import Link from 'next/link';
+import {ButtonGroup, IconButton, Link} from '@wishlez/ui';
+import NextLink from 'next/link';
 import {ChangeEvent, FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithTransaction} from '../../types/transactions';
 import {Amount} from '../amount';
-import {Icon} from '../icon';
 
 type Props = WithTransaction<{
     onChange: () => void
@@ -53,17 +53,19 @@ export const TransactionItem: FunctionComponent<Props> = (props) => {
                 <Amount amount={props.transaction.amount}/>
             </td>
             <td>
-                <Link href={`edit?id=${props.transaction.id}`}>
-                    <a>
-                        <Icon name={'edit'}/>
-                    </a>
-                </Link>
-                <button
-                    onClick={handleDelete}
-                    type={'button'}
-                >
-                    <Icon name={'delete'}/>
-                </button>
+                <ButtonGroup>
+                    <NextLink href={`edit?id=${props.transaction.id}`}>
+                        <IconButton
+                            as={Link}
+                            iconName={'edit'}
+                            type={'button'}
+                        />
+                    </NextLink>
+                    <IconButton
+                        iconName={'delete'}
+                        onClick={handleDelete}
+                    />
+                </ButtonGroup>
             </td>
         </tr>
     );

@@ -1,3 +1,4 @@
+import {Button, ButtonGroup} from '@wishlez/ui';
 import {useRouter} from 'next/router';
 import {FormEvent, FunctionComponent, useRef} from 'react';
 import useSWR from 'swr';
@@ -114,12 +115,17 @@ export const TransactionsFilterForm: FunctionComponent<Props> = (props) => {
                         </select>
                     </Label>
                 </div>
-                <button type={'reset'}>
-                    {'Reset'}
-                </button>
-                <button type={'submit'}>
-                    {'Apply'}
-                </button>
+                <ButtonGroup>
+                    <Button type={'reset'}>
+                        {'Reset'}
+                    </Button>
+                    <Button
+                        shade={'primary'}
+                        type={'submit'}
+                    >
+                        {'Apply'}
+                    </Button>
+                </ButtonGroup>
             </fieldset>
         </form>
     );

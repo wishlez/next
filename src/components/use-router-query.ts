@@ -1,4 +1,5 @@
 import {NextRouter, useRouter} from 'next/router';
+import {getAdjustedOptions} from '../services/utils/options';
 import {Query, QueryValue, WithQuery} from '../types/query';
 
 type BuildQuery = (query: Query) => WithQuery
@@ -15,6 +16,17 @@ type UseRouterQuery = () => {
     router: NextRouter
     updateQuery: UpdateQuery
 };
+
+const needUpdate = (existing: Query, updated: Query): boolean =>
+    !Object.entries(updated).every(([key, value]) => {
+        if (Array.isArray(value)) {
+            const {added, deleted} = getAdjustedOptions([].concat(existing[key] || []), value.map(String));
+
+            return !Boolean(added.length || deleted.length);
+        }
+
+        return existing[key] === value.toString();
+    });
 
 export const useRouterQuery: UseRouterQuery = () => {
     const router = useRouter();
@@ -52,8 +64,7 @@ export const useRouterQuery: UseRouterQuery = () => {
     };
 
     const updateQuery: UpdateQuery = async (query) => {
-        const existingKeys = Object.keys(router.query);
-        const needsUpdate = !Object.keys(query).every((key) => existingKeys.includes(key));
+        const needsUpdate = needUpdate(router.query, query);
 
         if (needsUpdate) {
             await replaceQuery(query, true);

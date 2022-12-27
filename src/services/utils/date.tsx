@@ -49,7 +49,7 @@ export const getMonthOptions = (): ReactElement[] => Array.from({length: 12}).ma
     </option>
 ));
 
-export const getYearOptions = (): ReactElement[] => Array.from({length: 50}).map((_, index) => (
+export const getYearOptions = (numberOfYears = 10): ReactElement[] => Array.from({length: numberOfYears}).map((_, index) => (
     <option
         key={index}
         value={currentYear - index}

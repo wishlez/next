@@ -4,6 +4,7 @@ import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Account, WithAccount} from '../../types/accounts';
+import {NavLink} from '../nav-link';
 import {AccountBalance} from './account-balance';
 
 type Props = WithAccount<{
@@ -26,7 +27,7 @@ export const AccountItem: FunctionComponent<Props> = (props) => {
         <tr>
             <td>
                 {props.account.builtIn ? props.account.name : (
-                    <NextLink href={`/transactions/list?accountId=${props.account.id}`}>{props.account.name}</NextLink>
+                    <NavLink href={`/transactions/list?accountId=${props.account.id}`}>{props.account.name}</NavLink>
                 )}
             </td>
             <td>

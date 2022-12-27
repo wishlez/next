@@ -1,9 +1,9 @@
 import {ButtonGroup, IconButton} from '@wishlez/ui';
-import Link from 'next/link';
 import {FunctionComponent, useState} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithTag} from '../../types/tags';
+import {NavLink} from '../nav-link';
 import {TagUpdate} from './tag-update';
 
 type Props = WithTag<{
@@ -40,7 +40,7 @@ export const TagItem: FunctionComponent<Props> = (props) => {
                 />
             ) : (
                 <>
-                    <Link href={`/transactions/search?tagId=${props.tag.id}`}>{props.tag.name}</Link>
+                    <NavLink href={`/transactions/search?tagId=${props.tag.id}`}>{props.tag.name}</NavLink>
                     {'\u00A0'}
                     <ButtonGroup>
                         <IconButton

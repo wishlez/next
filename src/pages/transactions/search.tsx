@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import {FunctionComponent} from 'react';
 import {SWRConfig} from 'swr';
 import {Layout} from '../../components/layout';
 import {NavContainer} from '../../components/nav-container';
+import {NavLink} from '../../components/nav-link';
 import {TransactionsSearch} from '../../components/transactions/transactions-search';
 import {authenticated, getSessionUser} from '../../services/auth/server-side-auth';
 import {getAccounts} from '../../services/database/accounts';
@@ -22,7 +22,7 @@ const Search: FunctionComponent<Props> = ({fallback}) => {
     return (
         <Layout>
             <NavContainer>
-                <Link href={'list'}>{'View list'}</Link>
+                <NavLink href={'list'}>{'View list'}</NavLink>
             </NavContainer>
             <SWRConfig value={{fallback}}>
                 <TransactionsSearch/>

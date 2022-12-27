@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {FunctionComponent, useEffect, useMemo} from 'react';
 import useSWR, {useSWRConfig} from 'swr';
 import {normalizeDate} from '../../services/utils/date';
@@ -7,6 +6,7 @@ import {swrKeys} from '../../services/utils/swr-keys';
 import {DateParts} from '../../types/date';
 import {WithStartingDate, WithTransactions} from '../../types/transactions';
 import {NavContainer} from '../nav-container';
+import {NavLink} from '../nav-link';
 import {useRouterQuery} from '../use-router-query';
 import {TransactionsTable} from './transactions-table';
 
@@ -48,9 +48,9 @@ export const TransactionsList: FunctionComponent = () => {
         <>
             {error && 'Failed to load transactions'}
             <NavContainer>
-                <Link href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</Link>
-                <Link href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</Link>
-                <Link href={'search'}>{'Search All'}</Link>
+                <NavLink href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</NavLink>
+                <NavLink href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</NavLink>
+                <NavLink href={'search'}>{'Search All'}</NavLink>
             </NavContainer>
             <TransactionsTable
                 onChange={refresh}

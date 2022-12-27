@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import {FunctionComponent} from 'react';
 import {SWRConfig} from 'swr';
 import {Layout} from '../../components/layout';
 import {NavContainer} from '../../components/nav-container';
+import {NavLink} from '../../components/nav-link';
 import {TransactionsList} from '../../components/transactions/transactions-list';
 import {authenticated, getSessionUser} from '../../services/auth/server-side-auth';
 import {getStartingDate} from '../../services/database/transactions';
@@ -20,7 +20,7 @@ const List: FunctionComponent<Props> = ({fallback}) => {
     return (
         <Layout>
             <NavContainer>
-                <Link href={'add'}>{'Add new'}</Link>
+                <NavLink href={'add'}>{'Add new'}</NavLink>
             </NavContainer>
             <SWRConfig value={{fallback}}>
                 <TransactionsList/>

@@ -1,3 +1,4 @@
+import {Amount} from '@wishlez/ui';
 import BigNumber from 'bignumber.js';
 import {FunctionComponent, useEffect, useState} from 'react';
 import {doGet} from '../../services/utils/fetch';
@@ -5,7 +6,6 @@ import {swrKeys} from '../../services/utils/swr-keys';
 import {AccountTypes} from '../../types/account-types';
 import {Account} from '../../types/accounts';
 import {Transaction, WithTransactions} from '../../types/transactions';
-import {Amount} from '../amount';
 
 const getBalance = async (id: number, accountType: AccountTypes, openingBalance: number, maximumAmountOwed: number): Promise<string> => {
     const {transactions} = await doGet<WithTransactions>(swrKeys.transactions, {accountId: id});

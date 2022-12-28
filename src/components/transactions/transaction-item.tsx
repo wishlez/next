@@ -1,10 +1,9 @@
-import {ButtonGroup, IconButton, Link} from '@wishlez/ui';
+import {Amount, ButtonGroup, IconButton, Link} from '@wishlez/ui';
 import NextLink from 'next/link';
 import {ChangeEvent, FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {WithTransaction} from '../../types/transactions';
-import {Amount} from '../amount';
 
 type Props = WithTransaction<{
     onChange: () => void

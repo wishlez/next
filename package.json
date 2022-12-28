@@ -19,7 +19,7 @@
   "dependencies": {
     "@prisma/client": "^4.4.0",
     "@types/luxon": "^3.0.2",
-    "@wishlez/ui": "^1.0.0-rc.8",
+    "@wishlez/ui": "^1.0.0-rc.13",
     "bignumber.js": "^9.1.0",
     "fuzzysort": "^2.0.1",
     "luxon": "^3.0.4",

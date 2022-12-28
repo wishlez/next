@@ -48,7 +48,7 @@ export const AccountsList: FunctionComponent = () => {
                     },
                     {
                         colId: 'actions',
-                        label: '',
+                        label: ' ',
                         renderRow: (account: Account) => account.builtIn ? (
                             <Icon name={'lock'}/>
                         ) : (

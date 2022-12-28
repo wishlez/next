@@ -1,12 +1,15 @@
-import {ComponentProps, FunctionComponent} from 'react';
+import {Amount, ButtonGroup, IconButton, Link, Table} from '@wishlez/ui';
+import NextLink from 'next/link';
+import {FunctionComponent} from 'react';
+import {doDelete} from '../../services/utils/fetch';
+import {swrKeys} from '../../services/utils/swr-keys';
 import {Transaction} from '../../types/transactions';
-import styles from '../table.module.css';
 import {useSelection} from '../use-selection';
-import {TransactionItem} from './transaction-item';
+import {TransactionDescriptionContainer} from './transaction-description-container';
 import {TransactionsBulkEditControls} from './transactions-bulk-edit-controls';
 
 type Props = {
-    onChange: ComponentProps<typeof TransactionItem>['onChange']
+    onChange: () => void
     onSelect?: (ids: number[]) => void
     selected?: number[]
     selectable?: boolean
@@ -20,6 +23,15 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
         selected: props.selected
     });
 
+    const handleDelete = async (transaction: Transaction): Promise<void> => {
+        const canDelete = confirm(`Do you want to delete ${transaction.description}?`);
+
+        if (canDelete) {
+            await doDelete(swrKeys.transactions, {id: transaction.id.toString()});
+            await props.onChange();
+        }
+    };
+
     return (
         <>
             {props.selectable && (
@@ -28,40 +40,85 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
                     onUpdate={props.onChange}
                 />
             )}
-            <table className={styles.table}>
-                <thead>
-                    <tr>
-                        <th>
-                            {props.selectable && (
-                                <input
-                                    onChange={handleSelectAll}
-                                    ref={selectAllRef}
-                                    type={'checkbox'}
+            <Table<Transaction>
+                columns={[
+                    {
+                        colId: 'description',
+                        fillTable: true,
+                        label: (
+                            <TransactionDescriptionContainer>
+                                {props.selectable && (
+                                    <input
+                                        onChange={handleSelectAll}
+                                        ref={selectAllRef}
+                                        type={'checkbox'}
+                                    />
+                                )}
+                                {'Description'}
+                            </TransactionDescriptionContainer>
+                        ),
+                        renderRow: (transaction: Transaction) => (
+                            <TransactionDescriptionContainer>
+                                {props.selectable && (
+                                    <input
+                                        checked={props.selected?.includes(transaction.id)}
+                                        name={'id'}
+                                        onChange={handleSelectOne}
+                                        type={'checkbox'}
+                                        value={transaction.id}
+                                    />
+                                )}
+                                <b>{transaction.description}</b>
+                            </TransactionDescriptionContainer>
+                        )
+                    },
+                    {
+                        colId: 'amount',
+                        contentAlign: 'right',
+                        label: 'Amount',
+                        renderRow: (transaction: Transaction) => <Amount amount={transaction.amount}/>
+                    },
+                    {
+                        colId: 'date',
+                        label: 'Date',
+                        rowKey: 'date'
+                    },
+                    {
+                        colId: 'fromAccount',
+                        label: 'From Account',
+                        renderRow: (transaction: Transaction) => transaction.FromAccount.name
+                    },
+                    {
+                        colId: 'toAccount',
+                        label: 'To Account',
+                        renderRow: (transaction: Transaction) => transaction.ToAccount.name
+                    },
+                    {
+                        colId: 'tags',
+                        label: 'To Account',
+                        renderRow: (transaction: Transaction) => transaction.TransactionTag.map(({Tag}) => Tag.name).join(', ')
+                    },
+                    {
+                        colId: 'actions',
+                        label: ' ',
+                        renderRow: (transaction: Transaction) => (
+                            <ButtonGroup>
+                                <NextLink href={`edit?id=${transaction.id}`}>
+                                    <IconButton
+                                        as={Link}
+                                        iconName={'edit'}
+                                    />
+                                </NextLink>
+                                <IconButton
+                                    iconName={'delete'}
+                                    onClick={(): Promise<void> => handleDelete(transaction)}
                                 />
-                            )}
-                            {'Description'}
-                        </th>
-                        <th>{'From Account'}</th>
-                        <th>{'To Account'}</th>
-                        <th>{'Date'}</th>
-                        <th>{'Tags'}</th>
-                        <th style={{textAlign: 'right'}}>{'Amount'}</th>
-                        <th/>
-                    </tr>
-                </thead>
-                <tbody>
-                    {(props.transactions || []).map((transaction: Transaction) => (
-                        <TransactionItem
-                            isSelected={props.selected?.includes(transaction.id)}
-                            key={transaction.id}
-                            onChange={props.onChange}
-                            onSelect={handleSelectOne}
-                            selectable={props.selectable}
-                            transaction={transaction}
-                        />
-                    ))}
-                </tbody>
-            </table>
+                            </ButtonGroup>
+                        )
+                    }
+                ]}
+                items={props.transactions || []}
+            />
         </>
     );
 };

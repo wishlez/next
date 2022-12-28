@@ -19,7 +19,7 @@
   "dependencies": {
     "@prisma/client": "^4.4.0",
     "@types/luxon": "^3.0.2",
-    "@wishlez/ui": "^1.0.0-rc.13",
+    "@wishlez/ui": "^1.0.0-rc.14",
     "bignumber.js": "^9.1.0",
     "fuzzysort": "^2.0.1",
     "luxon": "^3.0.4",
@@ -29,6 +29,7 @@
     "prisma": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6",
     "swr": "^1.3.0"
   },
   "devDependencies": {

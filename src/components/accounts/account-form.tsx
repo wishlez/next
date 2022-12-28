@@ -88,10 +88,7 @@ export const AccountForm: FunctionComponent<Props> = (props) => {
                 </Label>
             </div>
             <ButtonGroup>
-                <Button
-                    onClick={props.onCancel}
-                    type={'button'}
-                >
+                <Button onClick={props.onCancel}>
                     {'Cancel'}
                 </Button>
                 <Button

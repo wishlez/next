@@ -22,7 +22,7 @@ const Search: FunctionComponent<Props> = ({fallback}) => {
     return (
         <Layout>
             <NavContainer>
-                <NavLink href={'list'}>{'View list'}</NavLink>
+                <NavLink href={'list'}>{'View all transactions'}</NavLink>
             </NavContainer>
             <SWRConfig value={{fallback}}>
                 <TransactionsSearch/>

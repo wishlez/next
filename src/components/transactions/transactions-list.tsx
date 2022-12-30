@@ -50,7 +50,7 @@ export const TransactionsList: FunctionComponent = () => {
             <NavContainer>
                 <NavLink href={buildQuery(getMonthQuery(range, 1))}>{'\u226A Next Month'}</NavLink>
                 <NavLink href={buildQuery(getMonthQuery(range, -1))}>{'Previous Month \u226B'}</NavLink>
-                <NavLink href={'search'}>{'Search All'}</NavLink>
+                <NavLink href={'search'}>{'Search transactions'}</NavLink>
             </NavContainer>
             <TransactionsTable
                 onChange={refresh}

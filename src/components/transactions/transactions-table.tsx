@@ -1,11 +1,10 @@
-import {Amount, ButtonGroup, IconButton, Link, Table} from '@wishlez/ui';
+import {Amount, ButtonGroup, FlexContainer, IconButton, InputCheckbox, Link, Table} from '@wishlez/ui';
 import NextLink from 'next/link';
 import {FunctionComponent} from 'react';
 import {doDelete} from '../../services/utils/fetch';
 import {swrKeys} from '../../services/utils/swr-keys';
 import {Transaction} from '../../types/transactions';
 import {useSelection} from '../use-selection';
-import {TransactionDescriptionContainer} from './transaction-description-container';
 import {TransactionsBulkEditControls} from './transactions-bulk-edit-controls';
 
 type Props = {
@@ -32,6 +31,8 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
         }
     };
 
+    // console.log(selectAllRef.current.indeterminate, selectAllRef.current.checked);
+
     return (
         <>
             {props.selectable && (
@@ -46,30 +47,30 @@ export const TransactionsTable: FunctionComponent<Props> = (props) => {
                         colId: 'description',
                         fillTable: true,
                         label: (
-                            <TransactionDescriptionContainer>
+                            <FlexContainer>
                                 {props.selectable && (
-                                    <input
+                                    <InputCheckbox
+                                        label={''}
                                         onChange={handleSelectAll}
                                         ref={selectAllRef}
-                                        type={'checkbox'}
                                     />
                                 )}
                                 {'Description'}
-                            </TransactionDescriptionContainer>
+                            </FlexContainer>
                         ),
                         renderRow: (transaction: Transaction) => (
-                            <TransactionDescriptionContainer>
+                            <FlexContainer>
                                 {props.selectable && (
-                                    <input
+                                    <InputCheckbox
                                         checked={props.selected?.includes(transaction.id)}
+                                        label={''}
                                         name={'id'}
                                         onChange={handleSelectOne}
-                                        type={'checkbox'}
                                         value={transaction.id}
                                     />
                                 )}
                                 <b>{transaction.description}</b>
-                            </TransactionDescriptionContainer>
+                            </FlexContainer>
                         )
                     },
                     {
